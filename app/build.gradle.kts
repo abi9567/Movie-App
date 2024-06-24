@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -5,7 +8,12 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
+val appPropertiesFile = rootProject.file("app.properties")
+val appProperties = Properties()
+appProperties.load(FileInputStream(appPropertiesFile))
+
 android {
+
     namespace = "com.example.movieapp"
     compileSdk = 34
 
@@ -25,10 +33,18 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
+            buildConfigField("String", "BASE_URL", "\"${appProperties["BASE_URL"]}\"")
+            buildConfigField("String", "IMAGE_URL", "\"${appProperties["IMAGE_URL"]}\"")
+            buildConfigField("String", "API_KEY", "\"${appProperties["API_KEY"]}\"")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        debug {
+            buildConfigField("String", "BASE_URL", "\"${appProperties["BASE_URL"]}\"")
+            buildConfigField("String", "IMAGE_URL", "\"${appProperties["IMAGE_URL"]}\"")
+            buildConfigField("String", "API_KEY", "\"${appProperties["API_KEY"]}\"")
         }
     }
     compileOptions {
@@ -39,6 +55,7 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
     composeOptions {
@@ -72,6 +89,7 @@ dependencies {
     //Retrofit
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
+    implementation(libs.logging.interceptor)
 
     //Viewmodel & Live Data
     implementation (libs.androidx.lifecycle.viewmodel.compose)
@@ -84,4 +102,7 @@ dependencies {
 
     //Navigation
     implementation(libs.androidx.navigation.compose)
+
+    //Coil Image
+    implementation(libs.coil.compose)
 }

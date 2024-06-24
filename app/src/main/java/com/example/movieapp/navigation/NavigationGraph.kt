@@ -17,12 +17,11 @@ import com.example.movieapp.ui.screens.splashScreen.SplashScreen
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun NavigationGraph(navController : NavHostController) {
-
     Scaffold(containerColor = MaterialTheme.colorScheme.primary) { paddingValues ->
         SharedTransitionLayout {
                 NavHost(navController = navController,
                     modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
-                    startDestination = Screen.SplashScreen.route) {
+                    startDestination = Screen.HomeScreen.route) {
 
                     composable(route = Screen.SplashScreen.route) {
                         SplashScreen(navController = navController,

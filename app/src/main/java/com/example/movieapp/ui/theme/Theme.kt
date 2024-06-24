@@ -30,6 +30,7 @@ fun MovieAppTheme(
     MaterialTheme(
         colorScheme = LightColorScheme,
         typography = Typography,
+        shapes = MovieAppShape,
         content = content
     )
 }

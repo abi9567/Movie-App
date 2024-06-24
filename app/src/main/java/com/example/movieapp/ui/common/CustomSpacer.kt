@@ -9,11 +9,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 
 @Composable
-fun CustomWidthSpacer(@DimenRes dimenResId : Int) {
-    Spacer(modifier = Modifier.width(width = dimensionResource(id = dimenResId)))
+fun CustomWidthSpacer(@DimenRes dimenResId : Int, modifier : Modifier = Modifier) {
+    Spacer(modifier = modifier.width(width = dimensionResource(id = dimenResId)))
 }
 
 @Composable
-fun CustomHeightSpacer(@DimenRes dimenResId : Int) {
-    Spacer(modifier = Modifier.height(height = dimensionResource(id = dimenResId)))
+fun CustomHeightSpacer(@DimenRes dimenResId : Int, modifier : Modifier = Modifier) {
+    Spacer(modifier = modifier.height(height = dimensionResource(id = dimenResId)))
 }
