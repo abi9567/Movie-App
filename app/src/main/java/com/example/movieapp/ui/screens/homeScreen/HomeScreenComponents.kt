@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -27,7 +28,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.movieapp.BuildConfig
 import com.example.movieapp.R
+import com.example.movieapp.data.response.NowPlaying
 import com.example.movieapp.ui.common.CustomHeightSpacer
 import com.example.movieapp.ui.common.CustomWidthSpacer
 import com.example.movieapp.ui.theme.PrimaryGradientColor
@@ -35,10 +38,12 @@ import com.example.movieapp.ui.theme.SecondaryLightColor
 
 @Composable
 fun MovieListSingleItem(
+    item : NowPlaying?,
     onClick : () -> Unit
 ) {
     val context = LocalContext.current
     Column(modifier = Modifier
+        .fillMaxWidth()
         .clickable(interactionSource = remember { MutableInteractionSource() },
             indication = null, onClick = onClick
         )
@@ -49,14 +54,17 @@ fun MovieListSingleItem(
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(context = context)
-                    .data(R.drawable.movie_single)
+                    .data(BuildConfig.IMAGE_URL+item?.imageUrl)
                     .crossfade(enable = true)
                     .build(),
                 placeholder = painterResource(R.drawable.ic_logo),
                 contentDescription = null,
+                modifier = Modifier
+                    .aspectRatio(ratio = 0.71F)
+                    .fillMaxWidth(),
                 contentScale = ContentScale.Crop)
 
-            Text(text = "4.8",
+            Text(text = "${ item?.rating }",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
                     .padding(all = dimensionResource(id = R.dimen.margin8))
@@ -72,7 +80,7 @@ fun MovieListSingleItem(
 
         CustomHeightSpacer(dimenResId = R.dimen.margin8)
         
-        Text(text = "The Batman",
+        Text(text = item?.title ?: "",
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.titleLarge)

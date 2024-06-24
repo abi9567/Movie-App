@@ -46,6 +46,20 @@ object NetworkModule {
             return@addInterceptor chain.proceed(request = builder.build())
         }
 
+        client.addInterceptor { chain ->
+            val originalRequest = chain.request()
+            val originalUrl = originalRequest.url
+
+            val newUrl = originalUrl.newBuilder()
+                .addQueryParameter(name = "api_key", value = BuildConfig.API_KEY)
+                .build()
+
+            val newRequest = originalRequest.newBuilder()
+                .url(url = newUrl)
+                .build()
+            return@addInterceptor chain.proceed(request = newRequest)
+        }
+
         return client.build()
     }
 
@@ -57,7 +71,6 @@ object NetworkModule {
             .setLenient()
             .create()
     }
-
 
 
     @Singleton

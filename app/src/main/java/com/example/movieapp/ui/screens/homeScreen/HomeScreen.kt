@@ -1,5 +1,6 @@
 package com.example.movieapp.ui.screens.homeScreen
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -20,10 +21,14 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridItemSpanScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -34,6 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.movieapp.R
+import com.example.movieapp.data.response.Resource
 import com.example.movieapp.ui.common.CustomGradientButton
 import com.example.movieapp.ui.common.CustomScaffold
 import com.example.movieapp.ui.common.CustomWidthSpacer
@@ -42,9 +48,12 @@ import com.example.movieapp.ui.theme.ToolBarColor
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun HomeScreen(navController : NavController,
+               viewModel: HomeViewModel,
                sharedTransitionScope: SharedTransitionScope,
                animatedVisibilityScope : AnimatedVisibilityScope,
                paddingValues : PaddingValues) {
+
+    val movieList = viewModel.movieList.collectAsState(initial = null).value
 
     CustomScaffold(topBar = {
 
@@ -105,26 +114,41 @@ fun HomeScreen(navController : NavController,
             }
     }) { topBarPadding ->
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(count = 2),
-            horizontalArrangement = Arrangement.spacedBy(space = dimensionResource(id = R.dimen.margin16)),
-            verticalArrangement = Arrangement.spacedBy(space = dimensionResource(id = R.dimen.margin16)),
-            contentPadding = PaddingValues(all = dimensionResource(id = R.dimen.margin16)),
-            modifier = Modifier
-                .padding(paddingValues = topBarPadding)
-                .fillMaxSize()
-        ) {
-            item(span = { GridItemSpan(currentLineSpan = 2) }
-            ) {
-                MovieListTitle(text = "Now in cinemas")
+        when(movieList) {
+            is Resource.Loading -> {
+                CircularProgressIndicator()
             }
-            items(count = 10) {
-                MovieListSingleItem(
-                    onClick = {}
-                )
+            is Resource.Success -> {
+
+                val itemList = movieList.data?.results
+
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(count = 2),
+                    horizontalArrangement = Arrangement.spacedBy(space = dimensionResource(id = R.dimen.margin16)),
+                    verticalArrangement = Arrangement.spacedBy(space = dimensionResource(id = R.dimen.margin16)),
+                    contentPadding = PaddingValues(all = dimensionResource(id = R.dimen.margin16)),
+                    modifier = Modifier
+                        .padding(paddingValues = topBarPadding)
+                        .fillMaxSize()
+                ) {
+                    item(span = { GridItemSpan(currentLineSpan = 2) }
+                    ) {
+                        MovieListTitle(text = "Now in cinemas")
+                    }
+
+                    items(itemList ?: emptyList()) { item ->
+                        MovieListSingleItem(
+                            item = item,
+                            onClick = {}
+                        )
+                    }
+                }
+
+            }
+            else -> {
+                Log.d("Error", "Error")
             }
         }
     }
-
 
 }

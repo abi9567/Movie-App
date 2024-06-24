@@ -33,11 +33,12 @@ fun SplashScreen(navController : NavController,
     Box(modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        with(sharedTransitionScope) {
             Image(painter = painterResource(id = R.drawable.splash_background),
                 contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize(),
                 contentDescription = null)
 
+        with(sharedTransitionScope) {
             Image(painter = painterResource(id = R.drawable.ic_logo),
                 modifier = Modifier
                     .sharedElement(state = rememberSharedContentState(key = "icon"),

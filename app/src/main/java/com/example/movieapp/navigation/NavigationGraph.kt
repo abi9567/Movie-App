@@ -8,10 +8,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.movieapp.ui.screens.homeScreen.HomeScreen
+import com.example.movieapp.ui.screens.homeScreen.HomeViewModel
 import com.example.movieapp.ui.screens.splashScreen.SplashScreen
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -21,7 +23,7 @@ fun NavigationGraph(navController : NavHostController) {
         SharedTransitionLayout {
                 NavHost(navController = navController,
                     modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
-                    startDestination = Screen.HomeScreen.route) {
+                    startDestination = Screen.SplashScreen.route) {
 
                     composable(route = Screen.SplashScreen.route) {
                         SplashScreen(navController = navController,
@@ -31,9 +33,11 @@ fun NavigationGraph(navController : NavHostController) {
                     }
 
                     composable(route = Screen.HomeScreen.route) {
+                        val viewModel = hiltViewModel<HomeViewModel>()
                         HomeScreen(navController = navController,
                             sharedTransitionScope = this@SharedTransitionLayout,
                             animatedVisibilityScope = this,
+                            viewModel = viewModel,
                             paddingValues = paddingValues)
                     }
                 }

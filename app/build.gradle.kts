@@ -94,11 +94,13 @@ dependencies {
     //Viewmodel & Live Data
     implementation (libs.androidx.lifecycle.viewmodel.compose)
     implementation (libs.androidx.lifecycle.livedata)
+    implementation ("androidx.compose.runtime:runtime-livedata:1.6.8")
 
     //Hilt Dependency
     implementation (libs.hilt.android)
     kapt (libs.hilt.compiler)
     kapt (libs.androidx.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     //Navigation
     implementation(libs.androidx.navigation.compose)

@@ -1,5 +1,7 @@
 package com.example.movieapp.di
 
+import com.example.movieapp.data.api.APIInterface
+import com.example.movieapp.repository.Repository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,8 +14,9 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideRepository() {
-
+    fun provideRepository(
+        apiInterface: APIInterface
+    ) : Repository  {
+        return Repository(apiInterface = apiInterface)
     }
-
 }
