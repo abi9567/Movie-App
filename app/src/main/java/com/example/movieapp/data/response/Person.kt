@@ -1,0 +1,16 @@
+package com.example.movieapp.data.response
+
+import com.google.gson.annotations.SerializedName
+
+data class Person(
+    val name : String?,
+
+    @SerializedName("profile_path")
+    val profilePicture : String?,
+
+    @SerializedName("character")
+    val characterName : String?,
+
+    @SerializedName("department")
+    val department : String?
+)

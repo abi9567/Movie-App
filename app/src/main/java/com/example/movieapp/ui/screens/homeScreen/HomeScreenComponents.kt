@@ -1,6 +1,7 @@
 package com.example.movieapp.ui.screens.homeScreen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -31,8 +32,12 @@ import coil.request.ImageRequest
 import com.example.movieapp.BuildConfig
 import com.example.movieapp.R
 import com.example.movieapp.data.response.NowPlaying
+import com.example.movieapp.internal.extensions.formatMovieRating
 import com.example.movieapp.ui.common.CustomHeightSpacer
 import com.example.movieapp.ui.common.CustomWidthSpacer
+import com.example.movieapp.ui.theme.AppBackgroundColor
+import com.example.movieapp.ui.theme.MidnightBlue
+import com.example.movieapp.ui.theme.PrimaryColor
 import com.example.movieapp.ui.theme.PrimaryGradientColor
 import com.example.movieapp.ui.theme.SecondaryLightColor
 
@@ -57,19 +62,22 @@ fun MovieListSingleItem(
                     .data(BuildConfig.IMAGE_URL+item?.imageUrl)
                     .crossfade(enable = true)
                     .build(),
-                placeholder = painterResource(R.drawable.ic_logo),
+                placeholder = painterResource(R.drawable.ic_place_holder),
+                error = painterResource(R.drawable.ic_place_holder),
                 contentDescription = null,
                 modifier = Modifier
                     .aspectRatio(ratio = 0.71F)
                     .fillMaxWidth(),
                 contentScale = ContentScale.Crop)
 
-            Text(text = "${ item?.rating }",
+            Text(text = item?.rating.formatMovieRating(),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
                     .padding(all = dimensionResource(id = R.dimen.margin8))
                     .align(alignment = Alignment.TopEnd)
-                    .background(color = PrimaryGradientColor, shape = MaterialTheme.shapes.small)
+                    .background(color = if (item?.isLessRating == true)
+                        MidnightBlue else PrimaryGradientColor,
+                        shape = MaterialTheme.shapes.small)
                     .padding(
                         vertical = dimensionResource(id = R.dimen.margin4),
                         horizontal = dimensionResource(id = R.dimen.margin8)

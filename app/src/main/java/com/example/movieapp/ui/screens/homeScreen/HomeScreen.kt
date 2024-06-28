@@ -1,13 +1,9 @@
 package com.example.movieapp.ui.screens.homeScreen
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,34 +12,30 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyGridItemSpanScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.movieapp.R
-import com.example.movieapp.data.response.Resource
+import com.example.movieapp.navigation.Screen
+import com.example.movieapp.ui.common.CircularLoadingView
 import com.example.movieapp.ui.common.CustomGradientButton
+import com.example.movieapp.ui.common.CustomPagerComposeView
 import com.example.movieapp.ui.common.CustomScaffold
 import com.example.movieapp.ui.common.CustomWidthSpacer
-import com.example.movieapp.ui.theme.ToolBarColor
+import com.example.movieapp.ui.common.PaginationErrorView
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -53,7 +45,7 @@ fun HomeScreen(navController : NavController,
                animatedVisibilityScope : AnimatedVisibilityScope,
                paddingValues : PaddingValues) {
 
-    val movieList = viewModel.movieList.collectAsState(initial = null).value
+    val movieList = viewModel.filmList.collectAsLazyPagingItems()
 
     CustomScaffold(topBar = {
 
@@ -113,15 +105,9 @@ fun HomeScreen(navController : NavController,
 
             }
     }) { topBarPadding ->
-
-        when(movieList) {
-            is Resource.Loading -> {
-                CircularProgressIndicator()
-            }
-            is Resource.Success -> {
-
-                val itemList = movieList.data?.results
-
+        CustomPagerComposeView(pagingItem = movieList,
+            emptyItemView = { /*TODO*/ },
+            layoutView = {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(count = 2),
                     horizontalArrangement = Arrangement.spacedBy(space = dimensionResource(id = R.dimen.margin16)),
@@ -131,24 +117,30 @@ fun HomeScreen(navController : NavController,
                         .padding(paddingValues = topBarPadding)
                         .fillMaxSize()
                 ) {
-                    item(span = { GridItemSpan(currentLineSpan = 2) }
-                    ) {
+                    item(span = { GridItemSpan(currentLineSpan = 2) }) {
                         MovieListTitle(text = "Now in cinemas")
                     }
 
-                    items(itemList ?: emptyList()) { item ->
+                    items(count = movieList.itemCount) { position ->
+                        val item = movieList.get(index = position)
                         MovieListSingleItem(
                             item = item,
-                            onClick = {}
+                            onClick = {
+                                navController.navigate(route = Screen
+                                    .DetailScreen.detailScreenArgs(movieId = item?.id))
+                            }
                         )
                     }
+
+                    if(movieList.loadState.append is LoadState.Loading) {
+                        item(span = { GridItemSpan(currentLineSpan = 2) }) { CircularLoadingView(isPaginationLoading = true) }
+                    }
+
+                    if(movieList.loadState.append is LoadState.Error) {
+                        item(span = { GridItemSpan(currentLineSpan = 2) }) { PaginationErrorView(onRetry = { movieList.retry() }) }
+                    }
                 }
-
             }
-            else -> {
-                Log.d("Error", "Error")
-            }
-        }
+        )
     }
-
 }

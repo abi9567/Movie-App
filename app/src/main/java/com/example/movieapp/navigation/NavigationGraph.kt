@@ -1,6 +1,5 @@
 package com.example.movieapp.navigation
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.background
@@ -12,6 +11,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.movieapp.ui.screens.detailScreen.DetailScreen
+import com.example.movieapp.ui.screens.detailScreen.DetailViewModel
 import com.example.movieapp.ui.screens.homeScreen.HomeScreen
 import com.example.movieapp.ui.screens.homeScreen.HomeViewModel
 import com.example.movieapp.ui.screens.splashScreen.SplashScreen
@@ -40,6 +41,13 @@ fun NavigationGraph(navController : NavHostController) {
                             viewModel = viewModel,
                             paddingValues = paddingValues)
                     }
+
+                    composable(route = Screen.DetailScreen.route) {
+                        val viewModel = hiltViewModel<DetailViewModel>()
+                        DetailScreen(navController = navController,
+                            viewModel = viewModel)
+                    }
+
                 }
         }
     }

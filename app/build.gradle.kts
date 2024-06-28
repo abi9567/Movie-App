@@ -107,4 +107,8 @@ dependencies {
 
     //Coil Image
     implementation(libs.coil.compose)
+
+    //Paging 3
+    implementation ("androidx.paging:paging-compose:3.3.0")
+    implementation ("androidx.paging:paging-runtime:$3.3.0")
 }
