@@ -69,7 +69,8 @@ fun AboutScreenView(movieDetail : MovieDetail?,
                     cast : List<Person>?,
                     crew : List<Person>?,
                     onWatchVideoClick : () -> Unit,
-                    onRecommendedVideoClick : (Int?) -> Unit
+                    onRecommendedVideoClick : (Int?) -> Unit,
+                    onCastDetailClick : (Int?) -> Unit
 ) {
     val scrollState = rememberScrollState()
     val context = LocalContext.current
@@ -223,7 +224,8 @@ fun AboutScreenView(movieDetail : MovieDetail?,
                 horizontalArrangement = Arrangement.spacedBy(space = dimensionResource(id = R.dimen.margin24))
             ) {
                 items(items = cast) { item ->
-                    CastSingleView(item = item)
+                    CastSingleView(item = item,
+                        onClick = { onCastDetailClick(item.id) })
                 }
             }
         }
@@ -246,7 +248,7 @@ fun AboutScreenView(movieDetail : MovieDetail?,
                     .spacedBy(space = dimensionResource(id = R.dimen.margin24))
             ) {
                 items(items = crew) { item ->
-                    CastSingleView(item = item)
+                    CastSingleView(item = item, onClick = {})
                 }
             }
         }

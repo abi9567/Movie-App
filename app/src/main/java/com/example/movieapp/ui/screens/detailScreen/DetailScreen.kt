@@ -93,6 +93,9 @@ fun DetailScreen(
                                 recommendation = recommendations?.data?.results,
                                 onRecommendedVideoClick = { movieId ->
                                     navController.navigate(route = Screen.DetailScreen.detailScreenArgs(movieId = movieId))
+                                },
+                                onCastDetailClick = { id ->
+                                    navController.navigate(route = Screen.ActorDetailScreen.actorDetailScreen(actorId = id))
                                 }
                             )
                         }

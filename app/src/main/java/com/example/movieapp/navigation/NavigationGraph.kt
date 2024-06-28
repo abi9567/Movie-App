@@ -24,7 +24,7 @@ fun NavigationGraph(navController : NavHostController) {
         SharedTransitionLayout {
                 NavHost(navController = navController,
                     modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
-                    startDestination = Screen.SplashScreen.route) {
+                    startDestination = Screen.DetailScreen.route) {
 
                     composable(route = Screen.SplashScreen.route) {
                         SplashScreen(navController = navController,

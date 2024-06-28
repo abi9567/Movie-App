@@ -3,6 +3,9 @@ package com.example.movieapp.data.response
 import com.google.gson.annotations.SerializedName
 
 data class Person(
+
+    val id : Int?,
+
     val name : String?,
 
     @SerializedName("profile_path")

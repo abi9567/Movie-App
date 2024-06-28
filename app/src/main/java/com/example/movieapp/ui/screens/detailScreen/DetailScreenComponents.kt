@@ -97,7 +97,10 @@ fun RecommendationSingleView(item : NowPlaying?,
 }
 
 @Composable
-fun CastSingleView(item : Person?) {
+fun CastSingleView(item : Person?,
+                   onClick : () -> Unit
+) {
+
     Column(modifier = Modifier,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -113,6 +116,7 @@ fun CastSingleView(item : Person?) {
             contentDescription = null,
             modifier = Modifier
                 .clip(shape = CircleShape)
+                .clickable { onClick() }
                 .border(
                     width = 2.dp,
                     color = SecondaryLightColor.copy(alpha = 0.5F),
