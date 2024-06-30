@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Movie App</string>
+    <string name="actor_detail">Actor Detail</string>
+    <string name="popularity">Popularity</string>
+    <string name="other_names">Also known as</string>
+    <string name="known_for">Known for</string>
+    <string name="date_of_birth">Date of birth</string>
+    <string name="place_of_birth">Place of birth</string>
+    <string name="death_on">Date of death</string>
+    <string name="popular_movies">Popular Movies</string>
 </resources>

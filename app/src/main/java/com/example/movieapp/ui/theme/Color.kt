@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.Color
 
 val AppBackgroundColor = Color(0xFF1A2232)
 val SecondaryLightColor = Color(0xFF637394)
+val YellowColor = Color(0xFFFCF8A7)
 val PrimaryColor = Color.White
 val PrimaryGradientColor = Color(0xFFFF8036)
 val GradientColorSecond = Color(0xFFFC6D19)

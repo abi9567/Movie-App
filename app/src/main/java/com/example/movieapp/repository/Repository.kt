@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.movieapp.data.api.APIInterface
+import com.example.movieapp.data.response.ActorDetail
 import com.example.movieapp.data.response.Cast
 import com.example.movieapp.data.response.Comment
 import com.example.movieapp.data.response.CommonPagingResponse
@@ -18,10 +19,10 @@ import javax.inject.Inject
 
 class Repository @Inject constructor(private val apiInterface : APIInterface) : RepositoryInterface {
 
-    override fun getNowPlayingMovies() : Flow<PagingData<NowPlaying>> =
+    override fun getNowPlayingMovies(releaseDate : String?) : Flow<PagingData<NowPlaying>> =
         Pager(
             pagingSourceFactory = {
-                HomePagingSource(apiInterface = apiInterface)
+                HomePagingSource(apiInterface = apiInterface, releaseDate = releaseDate)
             },
             config = PagingConfig(pageSize = 10)
         ).flow
@@ -53,6 +54,18 @@ class Repository @Inject constructor(private val apiInterface : APIInterface) : 
     override suspend fun getYoutubeUrl(movieId: String?): Flow<Resource<CommonPagingResponse<Video>>> {
         return NetworkUtils.fetchData {
             apiInterface.getYoutubeVideoUrl(movieId = movieId)
+        }
+    }
+
+    override suspend fun getActorDetail(actorId: String?): Flow<Resource<ActorDetail>> {
+        return NetworkUtils.fetchData {
+            apiInterface.getActorDetail(actorId = actorId)
+        }
+    }
+
+    override suspend fun getActorMovies(actorId: String?): Flow<Resource<CommonPagingResponse<NowPlaying>>> {
+        return NetworkUtils.fetchData {
+            apiInterface.getActorFilms(actorId = actorId)
         }
     }
 }

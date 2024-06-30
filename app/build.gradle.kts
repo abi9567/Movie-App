@@ -36,6 +36,7 @@ android {
             buildConfigField("String", "BASE_URL", "\"${appProperties["BASE_URL"]}\"")
             buildConfigField("String", "IMAGE_URL", "\"${appProperties["IMAGE_URL"]}\"")
             buildConfigField("String", "API_KEY", "\"${appProperties["API_KEY"]}\"")
+            buildConfigField("String", "ACCESS_TOKEN", "\"${appProperties["ACCESS_TOKEN"]}\"")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -45,6 +46,7 @@ android {
             buildConfigField("String", "BASE_URL", "\"${appProperties["BASE_URL"]}\"")
             buildConfigField("String", "IMAGE_URL", "\"${appProperties["IMAGE_URL"]}\"")
             buildConfigField("String", "API_KEY", "\"${appProperties["API_KEY"]}\"")
+            buildConfigField("String", "ACCESS_TOKEN", "\"${appProperties["ACCESS_TOKEN"]}\"")
         }
     }
     compileOptions {
@@ -94,7 +96,7 @@ dependencies {
     //Viewmodel & Live Data
     implementation (libs.androidx.lifecycle.viewmodel.compose)
     implementation (libs.androidx.lifecycle.livedata)
-    implementation ("androidx.compose.runtime:runtime-livedata:1.6.8")
+    implementation (libs.androidx.runtime.livedata)
 
     //Hilt Dependency
     implementation (libs.hilt.android)
@@ -109,6 +111,6 @@ dependencies {
     implementation(libs.coil.compose)
 
     //Paging 3
-    implementation ("androidx.paging:paging-compose:3.3.0")
-    implementation ("androidx.paging:paging-runtime:$3.3.0")
+    implementation (libs.androidx.paging.compose)
+    implementation (libs.androidx.paging.runtime)
 }

@@ -11,6 +11,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.movieapp.ui.screens.actorDetailScreen.ActorDetailScreen
+import com.example.movieapp.ui.screens.actorDetailScreen.ActorViewModel
 import com.example.movieapp.ui.screens.detailScreen.DetailScreen
 import com.example.movieapp.ui.screens.detailScreen.DetailViewModel
 import com.example.movieapp.ui.screens.homeScreen.HomeScreen
@@ -24,7 +26,7 @@ fun NavigationGraph(navController : NavHostController) {
         SharedTransitionLayout {
                 NavHost(navController = navController,
                     modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
-                    startDestination = Screen.DetailScreen.route) {
+                    startDestination = Screen.SplashScreen.route) {
 
                     composable(route = Screen.SplashScreen.route) {
                         SplashScreen(navController = navController,
@@ -48,6 +50,10 @@ fun NavigationGraph(navController : NavHostController) {
                             viewModel = viewModel)
                     }
 
+                    composable(route = Screen.ActorDetailScreen.route) {
+                        val viewModel = hiltViewModel<ActorViewModel>()
+                        ActorDetailScreen(navController = navController, viewModel = viewModel)
+                    }
                 }
         }
     }

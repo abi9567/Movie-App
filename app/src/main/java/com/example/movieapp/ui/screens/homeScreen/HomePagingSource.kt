@@ -6,10 +6,10 @@ import com.example.movieapp.data.response.NowPlaying
 import com.example.movieapp.paging.BasePagingSource
 import javax.inject.Inject
 
-class HomePagingSource @Inject constructor(private val apiInterface : APIInterface)
+class HomePagingSource @Inject constructor(private val apiInterface : APIInterface, private val releaseDate : String?)
     : BasePagingSource<NowPlaying>() {
 
     override suspend fun load(page: Int, limit: Int) : CommonPagingResponse<NowPlaying> {
-        return apiInterface.nowPlayingMovieList(page = page)
+        return apiInterface.nowPlayingMovieList(page = page, releaseDate = releaseDate)
     }
 }

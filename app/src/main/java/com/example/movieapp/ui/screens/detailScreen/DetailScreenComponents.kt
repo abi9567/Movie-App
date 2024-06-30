@@ -49,6 +49,7 @@ import com.example.movieapp.ui.common.CustomHeightSpacer
 import com.example.movieapp.ui.common.CustomWidthSpacer
 import com.example.movieapp.ui.theme.PrimaryColor
 import com.example.movieapp.ui.theme.SecondaryLightColor
+import com.example.movieapp.ui.theme.YellowColor
 import com.example.movieapp.utils.other.Utils
 import okhttp3.internal.notify
 import java.util.Date
@@ -58,8 +59,7 @@ fun DetailScreenTitleDescriptionView(
     title : String,
     description : String
 ) {
-    Row(modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically) {
+    Row(modifier = Modifier.fillMaxWidth()) {
 
         Text(text = title, style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier
@@ -191,7 +191,7 @@ fun ReviewSingleView(comment : Comment?, modifier : Modifier) {
             }
 
             Icon(imageVector = Icons.Filled.Star,
-                tint = SecondaryLightColor,
+                tint = YellowColor,
                 modifier = Modifier.size(size = dimensionResource(id = R.dimen.margin16)),
                 contentDescription = null)
 

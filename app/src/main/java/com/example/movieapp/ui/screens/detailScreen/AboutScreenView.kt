@@ -60,6 +60,7 @@ import com.example.movieapp.ui.common.CustomHeightSpacer
 import com.example.movieapp.ui.common.CustomWidthSpacer
 import com.example.movieapp.ui.theme.RatingGradientBrush
 import com.example.movieapp.ui.theme.SecondaryLightColor
+import com.example.movieapp.ui.theme.YellowColor
 import kotlinx.coroutines.delay
 
 @Composable
@@ -132,7 +133,7 @@ fun AboutScreenView(movieDetail : MovieDetail?,
                     CustomWidthSpacer(dimenResId = R.dimen.margin4)
 
                     Icon(imageVector = Icons.Filled.Star,
-                        tint = SecondaryLightColor,
+                        tint = YellowColor,
                         contentDescription = null)
                 }
 

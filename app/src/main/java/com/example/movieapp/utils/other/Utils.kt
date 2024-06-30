@@ -19,6 +19,11 @@ object Utils {
         return dateFormat.format(date)
     }
 
+    fun formatTodayDate(date: Date) : String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        return dateFormat.format(date)
+    }
+
     fun openYoutubeLink(youtubeID: String?, context : Context) {
         if (youtubeID.isNullOrEmpty()) {
             context.showToast(message = "Video Not Found")

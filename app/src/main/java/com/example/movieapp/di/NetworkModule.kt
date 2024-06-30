@@ -41,24 +41,24 @@ object NetworkModule {
             val builder = chain.request().newBuilder()
                 .addHeader(name = "Accept", value = "application/json")
             if (authorizationHeader.isNullOrEmpty()) {
-                builder.addHeader(name = "Authorization", value = "Bearer ${BuildConfig.API_KEY}")
+                builder.addHeader(name = "Authorization", value = "Bearer ${BuildConfig.ACCESS_TOKEN}")
             }
             return@addInterceptor chain.proceed(request = builder.build())
         }
 
-        client.addInterceptor { chain ->
-            val originalRequest = chain.request()
-            val originalUrl = originalRequest.url
-
-            val newUrl = originalUrl.newBuilder()
-                .addQueryParameter(name = "api_key", value = BuildConfig.API_KEY)
-                .build()
-
-            val newRequest = originalRequest.newBuilder()
-                .url(url = newUrl)
-                .build()
-            return@addInterceptor chain.proceed(request = newRequest)
-        }
+//        client.addInterceptor { chain ->
+//            val originalRequest = chain.request()
+//            val originalUrl = originalRequest.url
+//
+//            val newUrl = originalUrl.newBuilder()
+//                .addQueryParameter(name = "api_key", value = BuildConfig.API_KEY)
+//                .build()
+//
+//            val newRequest = originalRequest.newBuilder()
+//                .url(url = newUrl)
+//                .build()
+//            return@addInterceptor chain.proceed(request = newRequest)
+//        }
 
         return client.build()
     }

@@ -1,5 +1,6 @@
 package com.example.movieapp.data.api
 
+import com.example.movieapp.data.response.ActorDetail
 import com.example.movieapp.data.response.Cast
 import com.example.movieapp.data.response.Comment
 import com.example.movieapp.data.response.CommonPagingResponse
@@ -12,10 +13,15 @@ import retrofit2.http.Query
 
 interface APIInterface {
 
-    @GET("movie/upcoming")
+    @GET("discover/movie")
     suspend fun nowPlayingMovieList(
         @Query("page") page: Int,
-        @Query("with_genres") genreId: String? = null
+        @Query("include_adult") includeAdult : Boolean = true,
+        @Query("include_video") includeVideo : Boolean = true,
+        @Query("with_original_language") language : String = "ml",
+        @Query("region") region : String = "IN",
+        @Query("release_date.lte") releaseDate : String?,
+        @Query("sort_by") sortBy : String = "primary_release_date.desc"
     ) : CommonPagingResponse<NowPlaying>
 
     @GET("movie/{movie_id}")
@@ -42,5 +48,16 @@ interface APIInterface {
     suspend fun getYoutubeVideoUrl(
         @Path("movie_id") movieId : String?
     ) : CommonPagingResponse<Video>
+
+    @GET("person/{person_id}")
+    suspend fun getActorDetail(
+        @Path("person_id") actorId : String?
+    ) : ActorDetail
+
+    @GET("discover/movie")
+    suspend fun getActorFilms(
+        @Query("page") page: Int = 1,
+        @Query("with_people") actorId : String?
+    ) : CommonPagingResponse<NowPlaying>
 
 }
