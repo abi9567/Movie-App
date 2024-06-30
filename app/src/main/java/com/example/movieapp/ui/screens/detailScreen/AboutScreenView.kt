@@ -319,6 +319,7 @@ fun AboutScreenView(movieDetail : MovieDetail?,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = dimensionResource(id = R.dimen.margin16))
+                .padding(bottom = dimensionResource(id = R.dimen.margin16))
                 .align(alignment = Alignment.BottomCenter),
             onClick = onBookTicketClick)
     }
