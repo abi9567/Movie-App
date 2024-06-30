@@ -20,4 +20,5 @@ interface RepositoryInterface {
     suspend fun getYoutubeUrl(movieId: String?) : Flow<Resource<CommonPagingResponse<Video>>>
     suspend fun getActorDetail(actorId : String?) : Flow<Resource<ActorDetail>>
     suspend fun getActorMovies(actorId: String?) : Flow<Resource<CommonPagingResponse<NowPlaying>>>
+    suspend fun searchMovies(searchKey : String?) : Flow<PagingData<NowPlaying>>
 }

@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.movieapp.R
@@ -70,7 +71,8 @@ fun DetailScreen(
                         viewModel.tabList.forEach { tab ->
                             Tab(selected = tab == selectedTab,
                                 text = {
-                                    Text(text = if(tab == DetailScreenTabs.About) "About" else "Sessions",
+                                    Text(text = stringResource(id = if(tab == DetailScreenTabs.About)
+                                        R.string.about else R.string.booking),
                                         style = MaterialTheme.typography.titleLarge,
                                         modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.margin8)),
                                         color = if(tab == selectedTab) PrimaryGradientColor else SecondaryLightColor
@@ -94,6 +96,7 @@ fun DetailScreen(
                                 onRecommendedVideoClick = { movieId ->
                                     navController.navigate(route = Screen.DetailScreen.detailScreenArgs(movieId = movieId))
                                 },
+                                onBookTicketClick = { viewModel.setTab(tab = DetailScreenTabs.Booking) },
                                 onCastDetailClick = { id ->
                                     navController.navigate(route = Screen.ActorDetailScreen.actorDetailScreen(actorId = id))
                                 }

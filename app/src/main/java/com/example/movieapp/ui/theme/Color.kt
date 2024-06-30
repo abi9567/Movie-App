@@ -10,5 +10,6 @@ val PrimaryColor = Color.White
 val PrimaryGradientColor = Color(0xFFFF8036)
 val GradientColorSecond = Color(0xFFFC6D19)
 val MidnightBlue = Color(0xFF1F293D)
+val TextFieldBorderColor = Color(0xFF6D9EFF).copy(alpha = 0.10F)
 val ButtonGradientBrush = Brush.linearGradient(colors = listOf(PrimaryGradientColor, GradientColorSecond))
 val RatingGradientBrush = Brush.verticalGradient(colors = listOf(MidnightBlue.copy(alpha = 0F), MidnightBlue))

@@ -16,8 +16,6 @@ interface APIInterface {
     @GET("discover/movie")
     suspend fun nowPlayingMovieList(
         @Query("page") page: Int,
-        @Query("include_adult") includeAdult : Boolean = true,
-        @Query("include_video") includeVideo : Boolean = true,
         @Query("with_original_language") language : String = "ml",
         @Query("region") region : String = "IN",
         @Query("release_date.lte") releaseDate : String?,
@@ -58,6 +56,12 @@ interface APIInterface {
     suspend fun getActorFilms(
         @Query("page") page: Int = 1,
         @Query("with_people") actorId : String?
+    ) : CommonPagingResponse<NowPlaying>
+
+    @GET("search/movie")
+    suspend fun searchMovie(
+        @Query("page") page : Int?,
+        @Query("query") searchKey : String?
     ) : CommonPagingResponse<NowPlaying>
 
 }

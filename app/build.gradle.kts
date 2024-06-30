@@ -113,4 +113,7 @@ dependencies {
     //Paging 3
     implementation (libs.androidx.paging.compose)
     implementation (libs.androidx.paging.runtime)
+
+    //Lottiefiles
+    implementation(libs.lottie.compose)
 }

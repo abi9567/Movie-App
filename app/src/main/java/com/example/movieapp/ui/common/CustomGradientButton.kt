@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.movieapp.R
 import com.example.movieapp.ui.theme.ButtonGradientBrush
@@ -29,6 +30,7 @@ fun CustomGradientButton(
     icon : @Composable (() -> Unit)? = null,
     text : String,
     textStyle : TextStyle = MaterialTheme.typography.headlineMedium,
+    verticalPadding : Dp = dimensionResource(id = R.dimen.margin4),
     onClick : () -> Unit
 ) {
     Row(modifier = modifier
@@ -41,7 +43,7 @@ fun CustomGradientButton(
         .clickable { onClick() }
         .padding(
             horizontal = dimensionResource(id = R.dimen.margin8),
-            vertical = dimensionResource(id = R.dimen.margin4)
+            vertical = verticalPadding
         ),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically

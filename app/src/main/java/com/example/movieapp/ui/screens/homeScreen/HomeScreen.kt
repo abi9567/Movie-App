@@ -4,17 +4,13 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,28 +20,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.movieapp.R
-import com.example.movieapp.navigation.Screen
-import com.example.movieapp.ui.common.CircularLoadingView
 import com.example.movieapp.ui.common.CustomGradientButton
-import com.example.movieapp.ui.common.CustomPagerComposeView
 import com.example.movieapp.ui.common.CustomScaffold
 import com.example.movieapp.ui.common.CustomWidthSpacer
-import com.example.movieapp.ui.common.PaginationErrorView
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun HomeScreen(navController : NavController,
                viewModel: HomeViewModel,
                sharedTransitionScope: SharedTransitionScope,
-               animatedVisibilityScope : AnimatedVisibilityScope,
-               paddingValues : PaddingValues) {
+               animatedVisibilityScope : AnimatedVisibilityScope) {
 
     val movieList = viewModel.filmList.collectAsLazyPagingItems()
+    val state = rememberLazyGridState()
 
     CustomScaffold(topBar = {
 
@@ -99,48 +91,18 @@ fun HomeScreen(navController : NavController,
 
                 CustomWidthSpacer(dimenResId = R.dimen.margin16)
 
-                CustomGradientButton(text = "Log in",
+                CustomGradientButton(text = stringResource(id = R.string.login),
                     textStyle = MaterialTheme.typography.titleSmall,
                     onClick = { })
 
             }
     }) { topBarPadding ->
-        CustomPagerComposeView(pagingItem = movieList,
-            emptyItemView = { /*TODO*/ },
-            layoutView = {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(count = 2),
-                    horizontalArrangement = Arrangement.spacedBy(space = dimensionResource(id = R.dimen.margin16)),
-                    verticalArrangement = Arrangement.spacedBy(space = dimensionResource(id = R.dimen.margin16)),
-                    contentPadding = PaddingValues(all = dimensionResource(id = R.dimen.margin16)),
-                    modifier = Modifier
-                        .padding(paddingValues = topBarPadding)
-                        .fillMaxSize()
-                ) {
-                    item(span = { GridItemSpan(currentLineSpan = 2) }) {
-                        MovieListTitle(text = "Now in cinemas")
-                    }
-
-                    items(count = movieList.itemCount) { position ->
-                        val item = movieList.get(index = position)
-                        MovieListSingleItem(
-                            item = item,
-                            onClick = {
-                                navController.navigate(route = Screen
-                                    .DetailScreen.detailScreenArgs(movieId = item?.id))
-                            }
-                        )
-                    }
-
-                    if(movieList.loadState.append is LoadState.Loading) {
-                        item(span = { GridItemSpan(currentLineSpan = 2) }) { CircularLoadingView(isPaginationLoading = true) }
-                    }
-
-                    if(movieList.loadState.append is LoadState.Error) {
-                        item(span = { GridItemSpan(currentLineSpan = 2) }) { PaginationErrorView(onRetry = { movieList.retry() }) }
-                    }
-                }
-            }
+        HomeScreenFilmPaginationView(
+            state = state,
+            modifier = Modifier.padding(paddingValues = topBarPadding),
+            movieList = movieList,
+            isSearchView = false,
+            navController = navController
         )
     }
 }

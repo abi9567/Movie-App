@@ -1,7 +1,11 @@
 package com.example.movieapp.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -17,12 +21,15 @@ import com.example.movieapp.ui.screens.detailScreen.DetailScreen
 import com.example.movieapp.ui.screens.detailScreen.DetailViewModel
 import com.example.movieapp.ui.screens.homeScreen.HomeScreen
 import com.example.movieapp.ui.screens.homeScreen.HomeViewModel
+import com.example.movieapp.ui.screens.searchScreen.SearchScreen
+import com.example.movieapp.ui.screens.searchScreen.SearchViewModel
 import com.example.movieapp.ui.screens.splashScreen.SplashScreen
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun NavigationGraph(navController : NavHostController) {
-    Scaffold(containerColor = MaterialTheme.colorScheme.primary) { paddingValues ->
+    Scaffold(containerColor = MaterialTheme.colorScheme.primary) {
         SharedTransitionLayout {
                 NavHost(navController = navController,
                     modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
@@ -40,8 +47,7 @@ fun NavigationGraph(navController : NavHostController) {
                         HomeScreen(navController = navController,
                             sharedTransitionScope = this@SharedTransitionLayout,
                             animatedVisibilityScope = this,
-                            viewModel = viewModel,
-                            paddingValues = paddingValues)
+                            viewModel = viewModel)
                     }
 
                     composable(route = Screen.DetailScreen.route) {
@@ -53,6 +59,14 @@ fun NavigationGraph(navController : NavHostController) {
                     composable(route = Screen.ActorDetailScreen.route) {
                         val viewModel = hiltViewModel<ActorViewModel>()
                         ActorDetailScreen(navController = navController, viewModel = viewModel)
+                    }
+
+                    composable(route = Screen.SearchScreen.route,
+                        enterTransition = { slideInVertically { it } },
+                        exitTransition = { slideOutVertically { it } }
+                        ) {
+                        val viewModel = hiltViewModel<SearchViewModel>()
+                        SearchScreen(navController = navController, viewModel = viewModel)
                     }
                 }
         }

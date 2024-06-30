@@ -1,16 +1,21 @@
 package com.example.movieapp.ui.screens.homeScreen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -25,19 +30,25 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.movieapp.BuildConfig
 import com.example.movieapp.R
 import com.example.movieapp.data.response.NowPlaying
 import com.example.movieapp.internal.extensions.formatMovieRating
+import com.example.movieapp.navigation.Screen
+import com.example.movieapp.ui.common.CircularLoadingView
 import com.example.movieapp.ui.common.CustomHeightSpacer
+import com.example.movieapp.ui.common.CustomLottieView
+import com.example.movieapp.ui.common.CustomPagerComposeView
 import com.example.movieapp.ui.common.CustomWidthSpacer
-import com.example.movieapp.ui.theme.AppBackgroundColor
+import com.example.movieapp.ui.common.PaginationErrorView
 import com.example.movieapp.ui.theme.MidnightBlue
-import com.example.movieapp.ui.theme.PrimaryColor
 import com.example.movieapp.ui.theme.PrimaryGradientColor
 import com.example.movieapp.ui.theme.SecondaryLightColor
 
@@ -49,7 +60,8 @@ fun MovieListSingleItem(
     val context = LocalContext.current
     Column(modifier = Modifier
         .fillMaxWidth()
-        .clickable(interactionSource = remember { MutableInteractionSource() },
+        .clickable(
+            interactionSource = remember { MutableInteractionSource() },
             indication = null, onClick = onClick
         )
 
@@ -75,9 +87,11 @@ fun MovieListSingleItem(
                 modifier = Modifier
                     .padding(all = dimensionResource(id = R.dimen.margin8))
                     .align(alignment = Alignment.TopEnd)
-                    .background(color = if (item?.isLessRating == true)
-                        MidnightBlue else PrimaryGradientColor,
-                        shape = MaterialTheme.shapes.small)
+                    .background(
+                        color = if (item?.isLessRating == true)
+                            MidnightBlue else PrimaryGradientColor,
+                        shape = MaterialTheme.shapes.small
+                    )
                     .padding(
                         vertical = dimensionResource(id = R.dimen.margin4),
                         horizontal = dimensionResource(id = R.dimen.margin8)
@@ -104,7 +118,8 @@ fun MovieListSingleItem(
 
 @Composable
 fun MovieListTitle(
-    text : String
+    text : String,
+    onSearchIconClick : () -> Unit
 ) {
     Row(modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically) {
@@ -120,12 +135,86 @@ fun MovieListTitle(
                 .weight(weight = 1F)
                 .fillMaxWidth())
 
-        IconButton(onClick = { /*TODO*/ }) {
+        IconButton(onClick = onSearchIconClick) {
             Icon(painter = painterResource(id = R.drawable.ic_search),
                 tint = Color.Unspecified,
                 contentDescription = null)
         }
-
     }
+}
 
+@Composable
+fun HomeScreenFilmPaginationView(
+    state : LazyGridState,
+    modifier : Modifier = Modifier,
+    isSearchView : Boolean,
+    movieList : LazyPagingItems<NowPlaying>,
+    navController : NavController
+) {
+
+    CustomPagerComposeView(pagingItem = movieList,
+        emptyItemView = {
+            Box(modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    CustomLottieView(lottieFile = R.raw.popcorn_animation,
+                        modifier = Modifier.aspectRatio(ratio = 2F))
+
+                    CustomHeightSpacer(dimenResId = R.dimen.margin16)
+
+                    Text(text = stringResource(id = R.string.no_movies),
+                        style = MaterialTheme.typography.titleLarge)
+
+                    if (isSearchView) {
+
+                        CustomHeightSpacer(dimenResId = R.dimen.margin4)
+
+                        Text(text = stringResource(id = R.string.search_with_another_movie),
+                            color = SecondaryLightColor,
+                            style = MaterialTheme.typography.titleSmall)
+                    }
+                }
+            }
+        },
+        layoutView = {
+            LazyVerticalGrid(
+                state = state,
+                columns = GridCells.Fixed(count = 2),
+                horizontalArrangement = Arrangement.spacedBy(space = dimensionResource(id = R.dimen.margin16)),
+                verticalArrangement = Arrangement.spacedBy(space = dimensionResource(id = R.dimen.margin16)),
+                contentPadding = PaddingValues(all = dimensionResource(id = R.dimen.margin16)),
+                modifier = modifier.fillMaxSize()
+            ) {
+                item(span = { GridItemSpan(currentLineSpan = 2) }) {
+                    if (isSearchView) return@item
+                    MovieListTitle(text = stringResource(id = R.string.now_in_cinemas),
+                        onSearchIconClick = {
+                            navController.navigate(route = Screen.SearchScreen.route) }
+                    )
+                }
+
+                items(count = movieList.itemCount) { position ->
+                    val item = movieList.get(index = position)
+                    MovieListSingleItem(
+                        item = item,
+                        onClick = {
+                            navController.navigate(route = Screen
+                                .DetailScreen.detailScreenArgs(movieId = item?.id))
+                        }
+                    )
+                }
+
+                if(movieList.loadState.append is LoadState.Loading) {
+                    item(span = { GridItemSpan(currentLineSpan = 2) }) {
+                        CircularLoadingView(isPaginationLoading = true) }
+                }
+
+                if(movieList.loadState.append is LoadState.Error) {
+                    item(span = { GridItemSpan(currentLineSpan = 2) }) {
+                        PaginationErrorView(onRetry = { movieList.retry() }) }
+                }
+            }
+        }
+    )
 }

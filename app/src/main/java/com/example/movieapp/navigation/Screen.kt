@@ -10,6 +10,7 @@ sealed class Screen(val route : String) {
     data object ActorDetailScreen : Screen(route = "actor_detail_screen/{$ACTOR_ID}") {
         fun actorDetailScreen(actorId : Int?) = "actor_detail_screen/$actorId"
     }
+    data object SearchScreen : Screen(route = "search_screen")
 
     companion object Args {
         const val MOVIE_ID = "movie_id"

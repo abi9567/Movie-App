@@ -10,6 +10,8 @@ class HomePagingSource @Inject constructor(private val apiInterface : APIInterfa
     : BasePagingSource<NowPlaying>() {
 
     override suspend fun load(page: Int, limit: Int) : CommonPagingResponse<NowPlaying> {
-        return apiInterface.nowPlayingMovieList(page = page, releaseDate = releaseDate)
+        return apiInterface.nowPlayingMovieList(page = page,
+            releaseDate = releaseDate
+        )
     }
 }

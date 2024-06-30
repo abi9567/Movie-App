@@ -43,6 +43,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -56,6 +57,7 @@ import com.example.movieapp.data.response.NowPlaying
 import com.example.movieapp.data.response.Person
 import com.example.movieapp.internal.extensions.calculateDurationTime
 import com.example.movieapp.internal.extensions.formatMovieRating
+import com.example.movieapp.ui.common.CustomGradientButton
 import com.example.movieapp.ui.common.CustomHeightSpacer
 import com.example.movieapp.ui.common.CustomWidthSpacer
 import com.example.movieapp.ui.theme.RatingGradientBrush
@@ -71,7 +73,8 @@ fun AboutScreenView(movieDetail : MovieDetail?,
                     crew : List<Person>?,
                     onWatchVideoClick : () -> Unit,
                     onRecommendedVideoClick : (Int?) -> Unit,
-                    onCastDetailClick : (Int?) -> Unit
+                    onCastDetailClick : (Int?) -> Unit,
+                    onBookTicketClick : () -> Unit
 ) {
     val scrollState = rememberScrollState()
     val context = LocalContext.current
@@ -86,179 +89,184 @@ fun AboutScreenView(movieDetail : MovieDetail?,
         totalVoteCount = movieDetail?.totalVotes ?: 0
     }
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .verticalScroll(state = scrollState)
-        .fillMaxWidth()) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 64.dp)
+            .verticalScroll(state = scrollState)
+            .fillMaxWidth())
+        {
+            Box(modifier = Modifier) {
+                AsyncImage(
+                    model = ImageRequest.Builder(context = context)
+                        .data(BuildConfig.IMAGE_URL+movieDetail?.backgroundImage)
+                        .build(),
+                    placeholder = painterResource(R.drawable.ic_place_holder),
+                    error = painterResource(R.drawable.ic_place_holder),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .aspectRatio(ratio = 2F)
+                        .fillMaxWidth(),
+                    contentScale = ContentScale.Crop)
 
-        Box(modifier = Modifier) {
-            AsyncImage(
-                model = ImageRequest.Builder(context = context)
-                    .data(BuildConfig.IMAGE_URL+movieDetail?.backgroundImage)
-                    .build(),
-                placeholder = painterResource(R.drawable.ic_place_holder),
-                error = painterResource(R.drawable.ic_place_holder),
-                contentDescription = null,
-                modifier = Modifier
-                    .aspectRatio(ratio = 2F)
-                    .fillMaxWidth(),
-                contentScale = ContentScale.Crop)
+                Icon(painter = painterResource(id = R.drawable.ic_watch),
+                    tint = Color.Unspecified,
+                    modifier = Modifier
+                        .clip(shape = CircleShape)
+                        .clickable { onWatchVideoClick() }
+                        .align(alignment = Alignment.Center),
+                    contentDescription = null)
+            }
 
-            Icon(painter = painterResource(id = R.drawable.ic_watch),
-                tint = Color.Unspecified,
-                modifier = Modifier
-                    .clip(shape = CircleShape)
-                    .clickable { onWatchVideoClick() }
-                    .align(alignment = Alignment.Center),
-                contentDescription = null)
-        }
-
-        Row(modifier = Modifier
-            .background(brush = RatingGradientBrush)
-            .height(intrinsicSize = IntrinsicSize.Max)
-            .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier
-                .weight(weight = 1F)
-                .padding(all = dimensionResource(id = R.dimen.margin16))
+            Row(modifier = Modifier
+                .background(brush = RatingGradientBrush)
+                .height(intrinsicSize = IntrinsicSize.Max)
                 .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(space = dimensionResource(id = R.dimen.margin4)),
-                horizontalAlignment = Alignment.CenterHorizontally
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = movieDetail?.rating.formatMovieRating(),
+                Column(modifier = Modifier
+                    .weight(weight = 1F)
+                    .padding(all = dimensionResource(id = R.dimen.margin16))
+                    .fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(space = dimensionResource(id = R.dimen.margin4)),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(text = movieDetail?.rating.formatMovieRating(),
+                            style = MaterialTheme.typography.displaySmall)
+
+                        CustomWidthSpacer(dimenResId = R.dimen.margin4)
+
+                        Icon(imageVector = Icons.Filled.Star,
+                            tint = YellowColor,
+                            contentDescription = null)
+                    }
+
+                    Text(text = "IMDB",
+                        color = SecondaryLightColor,
+                        style = MaterialTheme.typography.bodyLarge)
+                }
+
+                VerticalDivider(color = SecondaryLightColor.copy(alpha = 0.1F),
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(width = 1.dp),
+                    thickness = 1.dp)
+
+                Column(modifier = Modifier
+                    .weight(weight = 1F)
+                    .padding(all = dimensionResource(id = R.dimen.margin16))
+                    .fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(space = dimensionResource(id = R.dimen.margin4)),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(text = "$animateTotalVoteCount",
                         style = MaterialTheme.typography.displaySmall)
 
-                    CustomWidthSpacer(dimenResId = R.dimen.margin4)
-
-                    Icon(imageVector = Icons.Filled.Star,
-                        tint = YellowColor,
-                        contentDescription = null)
+                    Text(text = stringResource(id = R.string.total_votes),
+                        color = SecondaryLightColor,
+                        style = MaterialTheme.typography.bodyLarge)
                 }
-
-                Text(text = "IMDB",
-                    color = SecondaryLightColor,
-                    style = MaterialTheme.typography.bodyLarge)
             }
-
-            VerticalDivider(color = SecondaryLightColor.copy(alpha = 0.1F),
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(width = 1.dp),
-                thickness = 1.dp)
 
             Column(modifier = Modifier
-                .weight(weight = 1F)
-                .padding(all = dimensionResource(id = R.dimen.margin16))
-                .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(space = dimensionResource(id = R.dimen.margin4)),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(text = "$animateTotalVoteCount",
-                    style = MaterialTheme.typography.displaySmall)
-
-                Text(text = "Total votes",
-                    color = SecondaryLightColor,
-                    style = MaterialTheme.typography.bodyLarge)
-            }
-        }
-
-        Column(modifier = Modifier
-            .padding(top = dimensionResource(id = R.dimen.margin16))
-            .padding(horizontal = dimensionResource(id = R.dimen.margin16))) {
-
-            Text(
-                text = movieDetail?.description ?: "",
-                textAlign = TextAlign.Justify,
-                style = MaterialTheme.typography.bodyLarge
-            )
-
-            CustomHeightSpacer(dimenResId = R.dimen.margin16)
-
-            DetailScreenTitleDescriptionView(
-                title = "Certificate",
-                description = if (movieDetail?.adult == true) "18+" else "10+"
-            )
-            CustomHeightSpacer(dimenResId = R.dimen.margin8)
-
-            DetailScreenTitleDescriptionView(
-                title = "Language",
-                description = movieDetail?.availableLanguages?.get(index = 0)?.name ?: "English"
-            )
-            CustomHeightSpacer(dimenResId = R.dimen.margin8)
-
-            DetailScreenTitleDescriptionView(
-                title = "Runtime",
-                description = movieDetail?.durationInMinutes.calculateDurationTime()
-            )
-            CustomHeightSpacer(dimenResId = R.dimen.margin8)
-
-            DetailScreenTitleDescriptionView(
-                title = "Release",
-                description = movieDetail?.releaseDate ?: ""
-            )
-
-            movieDetail?.genreWithComma?.let {
-                CustomHeightSpacer(dimenResId = R.dimen.margin8)
-                DetailScreenTitleDescriptionView(
-                    title = "Genre",
-                    description = it
+                .padding(top = dimensionResource(id = R.dimen.margin16))
+                .padding(horizontal = dimensionResource(id = R.dimen.margin16)))
+            {
+                Text(
+                    text = movieDetail?.description ?: "",
+                    textAlign = TextAlign.Justify,
+                    style = MaterialTheme.typography.bodyLarge
                 )
+
+                CustomHeightSpacer(dimenResId = R.dimen.margin16)
+
+                DetailScreenTitleDescriptionView(
+                    title = stringResource(id = R.string.certificate),
+                    description = if (movieDetail?.adult == true) "18+" else "10+"
+                )
+                CustomHeightSpacer(dimenResId = R.dimen.margin8)
+
+                movieDetail?.availableLanguages?.get(index = 0)?.name?.let {
+                    DetailScreenTitleDescriptionView(
+                        title = stringResource(id = R.string.language),
+                        description = it
+                    )
+                    CustomHeightSpacer(dimenResId = R.dimen.margin8)
+                }
+
+                DetailScreenTitleDescriptionView(
+                    title = stringResource(id = R.string.runtime),
+                    description = movieDetail?.durationInMinutes.calculateDurationTime()
+                )
+                CustomHeightSpacer(dimenResId = R.dimen.margin8)
+
+                DetailScreenTitleDescriptionView(
+                    title = stringResource(id = R.string.release),
+                    description = movieDetail?.releaseDate ?: ""
+                )
+
+                movieDetail?.genreWithComma?.let {
+                    CustomHeightSpacer(dimenResId = R.dimen.margin8)
+                    DetailScreenTitleDescriptionView(
+                        title = stringResource(id = R.string.genre),
+                        description = it
+                    )
+                }
+
             }
 
-        }
+            if (!(cast.isNullOrEmpty())) {
+                CustomHeightSpacer(dimenResId = R.dimen.margin24)
 
-        if (!(cast.isNullOrEmpty())) {
-            CustomHeightSpacer(dimenResId = R.dimen.margin24)
+                Text(text = stringResource(id = R.string.cast), maxLines = 1,
+                    modifier = Modifier.padding(start = dimensionResource(id = R.dimen.margin16)),
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.headlineMedium)
 
-            Text(text = "Cast", maxLines = 1,
-                modifier = Modifier.padding(start = dimensionResource(id = R.dimen.margin16)),
-                overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.headlineMedium)
+                CustomHeightSpacer(dimenResId = R.dimen.margin16)
 
-            CustomHeightSpacer(dimenResId = R.dimen.margin16)
-
-            LazyRow(modifier = Modifier
-                .fillMaxWidth(),
-                contentPadding = PaddingValues(horizontal = dimensionResource(id = R.dimen.margin16)),
-                horizontalArrangement = Arrangement.spacedBy(space = dimensionResource(id = R.dimen.margin24))
-            ) {
-                items(items = cast) { item ->
-                    CastSingleView(item = item,
-                        onClick = { onCastDetailClick(item.id) })
+                LazyRow(modifier = Modifier
+                    .fillMaxWidth(),
+                    contentPadding = PaddingValues(horizontal = dimensionResource(id = R.dimen.margin16)),
+                    horizontalArrangement = Arrangement.spacedBy(space = dimensionResource(id = R.dimen.margin24))
+                ) {
+                    items(items = cast) { item ->
+                        CastSingleView(item = item,
+                            onClick = { onCastDetailClick(item.id) })
+                    }
                 }
             }
-        }
 
-        if (!(crew.isNullOrEmpty())) {
+            if (!(crew.isNullOrEmpty())) {
 
-            CustomHeightSpacer(dimenResId = R.dimen.margin24)
+                CustomHeightSpacer(dimenResId = R.dimen.margin24)
 
-            Text(text = "Crew", maxLines = 1,
-                modifier = Modifier.padding(start = dimensionResource(id = R.dimen.margin16)),
-                overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.headlineMedium)
+                Text(text = stringResource(id = R.string.crew), maxLines = 1,
+                    modifier = Modifier.padding(start = dimensionResource(id = R.dimen.margin16)),
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.headlineMedium)
 
-            CustomHeightSpacer(dimenResId = R.dimen.margin16)
+                CustomHeightSpacer(dimenResId = R.dimen.margin16)
 
-            LazyRow(modifier = Modifier
-                .fillMaxWidth(),
-                contentPadding = PaddingValues(horizontal = dimensionResource(id = R.dimen.margin16)),
-                horizontalArrangement = Arrangement
-                    .spacedBy(space = dimensionResource(id = R.dimen.margin24))
-            ) {
-                items(items = crew) { item ->
-                    CastSingleView(item = item, onClick = {})
+                LazyRow(modifier = Modifier
+                    .fillMaxWidth(),
+                    contentPadding = PaddingValues(horizontal = dimensionResource(id = R.dimen.margin16)),
+                    horizontalArrangement = Arrangement
+                        .spacedBy(space = dimensionResource(id = R.dimen.margin24))
+                ) {
+                    items(items = crew) { item ->
+                        CastSingleView(item = item,
+                            onClick = { onCastDetailClick(item.id) })
+                    }
                 }
             }
-        }
 
             if (!recommendation.isNullOrEmpty()) {
 
                 CustomHeightSpacer(dimenResId = R.dimen.margin24)
 
-                Text(text = "Recommended for you", maxLines = 1,
+                Text(text = stringResource(id = R.string.recommended), maxLines = 1,
                     modifier = Modifier.padding(start = dimensionResource(id = R.dimen.margin16)),
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.headlineMedium)
@@ -277,31 +285,41 @@ fun AboutScreenView(movieDetail : MovieDetail?,
                 }
             }
 
-        if (!comments.isNullOrEmpty()) {
+            if (!comments.isNullOrEmpty()) {
 
-            CustomHeightSpacer(dimenResId = R.dimen.margin24)
+                CustomHeightSpacer(dimenResId = R.dimen.margin24)
 
-            Text(text = "Top Comments", maxLines = 1,
-                modifier = Modifier.padding(start = dimensionResource(id = R.dimen.margin16)),
-                overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.headlineMedium)
+                Text(text = stringResource(id = R.string.top_comments), maxLines = 1,
+                    modifier = Modifier.padding(start = dimensionResource(id = R.dimen.margin16)),
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.headlineMedium)
 
-            CustomHeightSpacer(dimenResId = R.dimen.margin16)
+                CustomHeightSpacer(dimenResId = R.dimen.margin16)
 
-            LazyRow(modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(horizontal = dimensionResource(id = R.dimen.margin16)),
-                horizontalArrangement = Arrangement
-                    .spacedBy(space = dimensionResource(id = R.dimen.margin16))
-            ) {
-                items(items = comments) { comment ->
-                    ReviewSingleView(comment = comment,
-                        modifier = Modifier
-                            .height(height = 250.dp)
-                            .fillParentMaxWidth(fraction = if (comments.size == 1) 1F else 0.95F)
-                    )
+                LazyRow(modifier = Modifier.fillMaxWidth(),
+                    contentPadding = PaddingValues(horizontal = dimensionResource(id = R.dimen.margin16)),
+                    horizontalArrangement = Arrangement
+                        .spacedBy(space = dimensionResource(id = R.dimen.margin16))
+                ) {
+                    items(items = comments) { comment ->
+                        ReviewSingleView(comment = comment,
+                            modifier = Modifier
+                                .height(height = 250.dp)
+                                .fillParentMaxWidth(fraction = if (comments.size == 1) 1F else 0.95F)
+                        )
+                    }
                 }
             }
+            CustomHeightSpacer(dimenResId = R.dimen.margin16)
         }
-        CustomHeightSpacer(dimenResId = R.dimen.margin24)
+
+        CustomGradientButton(text = stringResource(id = R.string.book_ticket),
+            verticalPadding = 13.dp,
+            textStyle = MaterialTheme.typography.titleLarge,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = dimensionResource(id = R.dimen.margin16))
+                .align(alignment = Alignment.BottomCenter),
+            onClick = onBookTicketClick)
     }
 }

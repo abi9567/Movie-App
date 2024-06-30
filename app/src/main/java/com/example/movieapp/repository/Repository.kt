@@ -13,6 +13,7 @@ import com.example.movieapp.data.response.NowPlaying
 import com.example.movieapp.data.response.Resource
 import com.example.movieapp.data.response.Video
 import com.example.movieapp.ui.screens.homeScreen.HomePagingSource
+import com.example.movieapp.ui.screens.searchScreen.SearchPagingSource
 import com.example.movieapp.utils.network.NetworkUtils
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -67,5 +68,12 @@ class Repository @Inject constructor(private val apiInterface : APIInterface) : 
         return NetworkUtils.fetchData {
             apiInterface.getActorFilms(actorId = actorId)
         }
+    }
+
+    override suspend fun searchMovies(searchKey: String?): Flow<PagingData<NowPlaying>> {
+        return Pager(
+            pagingSourceFactory = { SearchPagingSource(apiInterface = apiInterface, searchKey = searchKey) },
+            config = PagingConfig(pageSize = 10),
+        ).flow
     }
 }
