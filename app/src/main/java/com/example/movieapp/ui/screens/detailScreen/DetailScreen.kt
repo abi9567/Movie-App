@@ -1,5 +1,6 @@
 package com.example.movieapp.ui.screens.detailScreen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -43,6 +44,10 @@ fun DetailScreen(
     val comments by viewModel.reviews.collectAsState(initial = null)
     val cast by viewModel.credits.collectAsState(initial = null)
     val youtubeUrls by viewModel.youtubeUrls.collectAsState(initial = null)
+
+    BackHandler(enabled = selectedTab == DetailScreenTabs.Booking) {
+        viewModel.setTab(tab = DetailScreenTabs.About)
+    }
 
     CustomScaffold(
         topBar = {
