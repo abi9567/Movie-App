@@ -58,7 +58,8 @@ fun NavigationGraph(navController : NavHostController) {
 
                     composable(route = Screen.ActorDetailScreen.route) {
                         val viewModel = hiltViewModel<ActorViewModel>()
-                        ActorDetailScreen(navController = navController, viewModel = viewModel)
+                        ActorDetailScreen(navController = navController,
+                            viewModel = viewModel)
                     }
 
                     composable(route = Screen.SearchScreen.route,

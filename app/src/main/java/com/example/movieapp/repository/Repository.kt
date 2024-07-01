@@ -9,7 +9,7 @@ import com.example.movieapp.data.response.Cast
 import com.example.movieapp.data.response.Comment
 import com.example.movieapp.data.response.CommonPagingResponse
 import com.example.movieapp.data.response.MovieDetail
-import com.example.movieapp.data.response.NowPlaying
+import com.example.movieapp.data.response.Movie
 import com.example.movieapp.data.response.Resource
 import com.example.movieapp.data.response.Video
 import com.example.movieapp.ui.screens.homeScreen.HomePagingSource
@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 class Repository @Inject constructor(private val apiInterface : APIInterface) : RepositoryInterface {
 
-    override fun getNowPlayingMovies(releaseDate : String?) : Flow<PagingData<NowPlaying>> =
+    override fun getNowPlayingMovies(releaseDate : String?) : Flow<PagingData<Movie>> =
         Pager(
             pagingSourceFactory = {
                 HomePagingSource(apiInterface = apiInterface, releaseDate = releaseDate)
@@ -34,7 +34,7 @@ class Repository @Inject constructor(private val apiInterface : APIInterface) : 
         }
     }
 
-    override suspend fun getRecommendedMovies(movieId: String?): Flow<Resource<CommonPagingResponse<NowPlaying>>> {
+    override suspend fun getRecommendedMovies(movieId: String?): Flow<Resource<CommonPagingResponse<Movie>>> {
         return NetworkUtils.fetchData {
             apiInterface.getRecommendations(movieId = movieId)
         }
@@ -64,13 +64,13 @@ class Repository @Inject constructor(private val apiInterface : APIInterface) : 
         }
     }
 
-    override suspend fun getActorMovies(actorId: String?): Flow<Resource<CommonPagingResponse<NowPlaying>>> {
+    override suspend fun getActorMovies(actorId: String?): Flow<Resource<CommonPagingResponse<Movie>>> {
         return NetworkUtils.fetchData {
             apiInterface.getActorFilms(actorId = actorId)
         }
     }
 
-    override suspend fun searchMovies(searchKey: String?): Flow<PagingData<NowPlaying>> {
+    override suspend fun searchMovies(searchKey: String?): Flow<PagingData<Movie>> {
         return Pager(
             pagingSourceFactory = { SearchPagingSource(apiInterface = apiInterface, searchKey = searchKey) },
             config = PagingConfig(pageSize = 10),

@@ -53,7 +53,7 @@ import com.example.movieapp.BuildConfig
 import com.example.movieapp.R
 import com.example.movieapp.data.response.Comment
 import com.example.movieapp.data.response.MovieDetail
-import com.example.movieapp.data.response.NowPlaying
+import com.example.movieapp.data.response.Movie
 import com.example.movieapp.data.response.Person
 import com.example.movieapp.internal.extensions.calculateDurationTime
 import com.example.movieapp.internal.extensions.formatMovieRating
@@ -67,7 +67,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun AboutScreenView(movieDetail : MovieDetail?,
-                    recommendation : List<NowPlaying>?,
+                    recommendation : List<Movie>?,
                     comments : List<Comment>?,
                     cast : List<Person>?,
                     crew : List<Person>?,

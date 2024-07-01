@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieapp.data.response.ActorDetail
 import com.example.movieapp.data.response.CommonPagingResponse
-import com.example.movieapp.data.response.NowPlaying
+import com.example.movieapp.data.response.Movie
 import com.example.movieapp.data.response.Resource
 import com.example.movieapp.navigation.Screen
 import com.example.movieapp.repository.Repository
@@ -24,8 +24,11 @@ class ActorViewModel @Inject constructor(private val repository: Repository, sav
     private val _actorDetail = MutableStateFlow<Resource<ActorDetail>?>(value = null)
     val actorDetail : Flow<Resource<ActorDetail>?> = _actorDetail
 
-    private val _actorMovies = MutableStateFlow<Resource<CommonPagingResponse<NowPlaying>>?>(value = null)
-    val actorMovies : Flow<Resource<CommonPagingResponse<NowPlaying>>?> = _actorMovies
+    private val _actorMovies = MutableStateFlow<Resource<CommonPagingResponse<Movie>>?>(value = null)
+    val actorMovies : Flow<Resource<CommonPagingResponse<Movie>>?> = _actorMovies
+
+    private val _isLargeImageVisible = MutableStateFlow(value = false)
+    val isLargeImageVisible : Flow<Boolean> = _isLargeImageVisible
 
     init {
         getActorDetail()
@@ -46,5 +49,9 @@ class ActorViewModel @Inject constructor(private val repository: Repository, sav
                 _actorMovies.value = it
             }
         }
+    }
+
+    fun setImageVisibility() {
+        _isLargeImageVisible.value = !_isLargeImageVisible.value
     }
 }

@@ -39,7 +39,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.movieapp.BuildConfig
 import com.example.movieapp.R
-import com.example.movieapp.data.response.NowPlaying
+import com.example.movieapp.data.response.Movie
 import com.example.movieapp.internal.extensions.formatMovieRating
 import com.example.movieapp.navigation.Screen
 import com.example.movieapp.ui.common.CircularLoadingView
@@ -54,7 +54,7 @@ import com.example.movieapp.ui.theme.SecondaryLightColor
 
 @Composable
 fun MovieListSingleItem(
-    item : NowPlaying?,
+    item : Movie?,
     onClick : () -> Unit
 ) {
     val context = LocalContext.current
@@ -109,7 +109,7 @@ fun MovieListSingleItem(
 
         CustomHeightSpacer(dimenResId = R.dimen.margin4)
 
-        Text(text = "Action",
+        Text(text = item?.genreName ?: "",
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.bodyLarge.copy(color = SecondaryLightColor))
@@ -148,7 +148,7 @@ fun HomeScreenFilmPaginationView(
     state : LazyGridState,
     modifier : Modifier = Modifier,
     isSearchView : Boolean,
-    movieList : LazyPagingItems<NowPlaying>,
+    movieList : LazyPagingItems<Movie>,
     navController : NavController
 ) {
 

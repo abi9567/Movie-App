@@ -5,7 +5,7 @@ import com.example.movieapp.data.response.Cast
 import com.example.movieapp.data.response.Comment
 import com.example.movieapp.data.response.CommonPagingResponse
 import com.example.movieapp.data.response.MovieDetail
-import com.example.movieapp.data.response.NowPlaying
+import com.example.movieapp.data.response.Movie
 import com.example.movieapp.data.response.Video
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -20,7 +20,7 @@ interface APIInterface {
         @Query("region") region : String = "IN",
         @Query("release_date.lte") releaseDate : String?,
         @Query("sort_by") sortBy : String = "primary_release_date.desc"
-    ) : CommonPagingResponse<NowPlaying>
+    ) : CommonPagingResponse<Movie>
 
     @GET("movie/{movie_id}")
     suspend fun getMovieDetails(
@@ -30,7 +30,7 @@ interface APIInterface {
     @GET("movie/{movie_id}/recommendations")
     suspend fun getRecommendations(
         @Path("movie_id") movieId : String?
-    ) : CommonPagingResponse<NowPlaying>
+    ) : CommonPagingResponse<Movie>
 
     @GET("movie/{movie_id}/credits")
     suspend fun getCredits(
@@ -56,12 +56,12 @@ interface APIInterface {
     suspend fun getActorFilms(
         @Query("page") page: Int = 1,
         @Query("with_people") actorId : String?
-    ) : CommonPagingResponse<NowPlaying>
+    ) : CommonPagingResponse<Movie>
 
     @GET("search/movie")
     suspend fun searchMovie(
         @Query("page") page : Int?,
         @Query("query") searchKey : String?
-    ) : CommonPagingResponse<NowPlaying>
+    ) : CommonPagingResponse<Movie>
 
 }

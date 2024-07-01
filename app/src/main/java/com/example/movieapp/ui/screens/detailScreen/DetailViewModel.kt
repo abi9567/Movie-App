@@ -7,7 +7,7 @@ import com.example.movieapp.data.response.Cast
 import com.example.movieapp.data.response.Comment
 import com.example.movieapp.data.response.CommonPagingResponse
 import com.example.movieapp.data.response.MovieDetail
-import com.example.movieapp.data.response.NowPlaying
+import com.example.movieapp.data.response.Movie
 import com.example.movieapp.data.response.Resource
 import com.example.movieapp.data.response.Video
 import com.example.movieapp.internal.enums.DetailScreenTabs
@@ -30,8 +30,8 @@ class DetailViewModel @Inject constructor(private val repository : Repository,
     private val _movieDetail = MutableStateFlow<Resource<MovieDetail>?>(null)
     val movieDetail : Flow<Resource<MovieDetail>?> = _movieDetail
 
-    private val _recommendations = MutableStateFlow<Resource<CommonPagingResponse<NowPlaying>>?>(null)
-    val recommendations : Flow<Resource<CommonPagingResponse<NowPlaying>>?> = _recommendations
+    private val _recommendations = MutableStateFlow<Resource<CommonPagingResponse<Movie>>?>(null)
+    val recommendations : Flow<Resource<CommonPagingResponse<Movie>>?> = _recommendations
 
     private val _credits = MutableStateFlow<Resource<Cast>?>(null)
     val credits : Flow<Resource<Cast>?> = _credits
