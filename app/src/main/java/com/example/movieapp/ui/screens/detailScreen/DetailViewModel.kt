@@ -24,7 +24,7 @@ class DetailViewModel @Inject constructor(private val repository : Repository,
     savedStateHandle : SavedStateHandle
     ) : ViewModel() {
 
-    private val _selectedTab = MutableStateFlow(value = DetailScreenTabs.About)
+    private val _selectedTab = MutableStateFlow(value = DetailScreenTabs.Booking)
     val selectedTab : Flow<DetailScreenTabs> = _selectedTab
 
     private val _movieDetail = MutableStateFlow<Resource<MovieDetail>?>(null)
@@ -45,6 +45,9 @@ class DetailViewModel @Inject constructor(private val repository : Repository,
     private val movieId = savedStateHandle.get<String?>(Screen.MOVIE_ID)
 //    private val movieId = "1022789"
 
+    private val _isChecked = MutableStateFlow(value = false)
+    val isChecked : Flow<Boolean> = _isChecked
+
     val tabList = listOf(DetailScreenTabs.About, DetailScreenTabs.Booking)
 
     fun setTab(tab : DetailScreenTabs) {
@@ -53,11 +56,11 @@ class DetailViewModel @Inject constructor(private val repository : Repository,
     }
 
     init {
-        fetchMovieDetail()
-        fetchRecommendations()
-        getCredits()
-        getComments()
-        getYoutubeUrl()
+//        fetchMovieDetail()
+//        fetchRecommendations()
+//        getCredits()
+//        getComments()
+//        getYoutubeUrl()
     }
 
     private fun fetchMovieDetail() {
@@ -98,5 +101,9 @@ class DetailViewModel @Inject constructor(private val repository : Repository,
                 _youtubeUrls.value = it
             }
         }
+    }
+
+    fun setSwitchBoxValue() {
+        _isChecked.value = !_isChecked.value
     }
 }

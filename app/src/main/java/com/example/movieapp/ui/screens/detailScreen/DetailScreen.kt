@@ -38,7 +38,7 @@ fun DetailScreen(
     viewModel : DetailViewModel
 ) {
     val context = LocalContext.current
-    val selectedTab by viewModel.selectedTab.collectAsState(initial = DetailScreenTabs.About)
+    val selectedTab by viewModel.selectedTab.collectAsState(initial = DetailScreenTabs.Booking)
     val movieDetail by viewModel.movieDetail.collectAsState(initial = null)
     val recommendations by viewModel.recommendations.collectAsState(initial = null)
     val comments by viewModel.reviews.collectAsState(initial = null)
@@ -62,7 +62,8 @@ fun DetailScreen(
         {
             when(movieDetail) {
                 is Resource.Loading -> { CustomLoading() }
-                is Resource.Success -> {
+//                is Resource.Success -> {
+                else -> {
                     TabRow(selectedTabIndex = selectedTab.ordinal,
                         indicator = { tabPositions ->
                             TabRowDefaults.SecondaryIndicator(
@@ -108,10 +109,10 @@ fun DetailScreen(
                             )
                         }
 
-                        else -> { SessionsView() }
+                        else -> { SessionsView(viewModel = viewModel) }
                     }
                 }
-                else -> { }
+//                else -> { }
             }
         }
     }

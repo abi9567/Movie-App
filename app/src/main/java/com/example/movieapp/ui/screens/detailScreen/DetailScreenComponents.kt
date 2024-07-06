@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +45,7 @@ import com.example.movieapp.ui.common.CustomHeightSpacer
 import com.example.movieapp.ui.common.CustomWidthSpacer
 import com.example.movieapp.ui.theme.PrimaryColor
 import com.example.movieapp.ui.theme.SecondaryLightColor
+import com.example.movieapp.ui.theme.TextFieldBorderColor
 import com.example.movieapp.ui.theme.YellowColor
 import com.example.movieapp.utils.other.Utils
 
@@ -202,5 +204,44 @@ fun ReviewSingleView(comment : Comment?, modifier : Modifier) {
             maxLines = 9,
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.bodyLarge)
+    }
+}
+
+@Composable
+fun MovieBookingSingleRowWithTheatreName() {
+
+    Column(modifier = Modifier
+        .height(intrinsicSize = IntrinsicSize.Max)
+        .clickable { }
+        .padding(vertical = dimensionResource(id = R.dimen.margin16))
+        .fillMaxWidth(),
+        verticalArrangement = Arrangement.Center
+    ) {
+
+        Row(modifier = Modifier
+            .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = "14 : 50",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = dimensionResource(id = R.dimen.margin16))
+                    .weight(weight = 0.3F),
+                style = MaterialTheme.typography.headlineMedium)
+
+            VerticalDivider(modifier = Modifier
+                .padding(horizontal = dimensionResource(id = R.dimen.margin16))
+                .fillMaxHeight(),
+                color = TextFieldBorderColor
+            )
+
+            Text(text = "Eurasia",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(weight = 0.7F),
+                style = MaterialTheme.typography.titleSmall)
+        }
+
+        CustomHeightSpacer(dimenResId = R.dimen.margin16)
     }
 }
