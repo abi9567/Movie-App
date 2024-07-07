@@ -16,8 +16,7 @@ class SeatSelectionViewModel : ViewModel() {
     private val _totalSeatsToBeBooked = MutableStateFlow(value = 1)
     val totalSeatsToBeBooked : Flow<Int> = _totalSeatsToBeBooked
 
-    private val _remainingSeatsToBeBooked = MutableStateFlow(value = 1)
-    val remainingSeatsToBeBooked : Flow<Int> = _remainingSeatsToBeBooked
+    private val _remainingSeatsToBeBooked = MutableStateFlow(value = 0)
 
     init {
         setTotalSeatsToBeBooked(count = 5)
@@ -34,6 +33,7 @@ class SeatSelectionViewModel : ViewModel() {
     }
 
     private fun addSeat(item : Seat?) {
+        if (_selectedSeats.value?.size == _totalSeatsToBeBooked.value) return
         val currentSelectedSeatList = _selectedSeats.value?.toMutableList() ?: mutableListOf()
 
         val key = item?.seatNumber?.first().toString()
@@ -43,22 +43,28 @@ class SeatSelectionViewModel : ViewModel() {
         val seatsToBeAdded = availableSeatsForBooking(
             seatListForKey = fullSeatListForKey,
             fromIndex = currentSeatPositionInTheList,
-            toIndex = currentSeatPositionInTheList + _totalSeatsToBeBooked.value)
+            toIndex = currentSeatPositionInTheList + _remainingSeatsToBeBooked.value)
 
         currentSelectedSeatList.addAll(seatsToBeAdded)
         _selectedSeats.value = currentSelectedSeatList
+        setRemainingSeatsToBeBooked(countTobeMinus = seatsToBeAdded.size)
     }
 
     private fun removeSeat(item : Seat?) {
         val currentList = _selectedSeats.value?.toMutableList()?.apply {
             remove(element = item)
         }
-        setTotalSeatsToBeBooked(count = _totalSeatsToBeBooked.value.minus(other = currentList?.size ?: 0))
+        setRemainingSeatsToBeBooked(countTobeMinus = -1)
         _selectedSeats.value = currentList
     }
 
     private fun setTotalSeatsToBeBooked(count : Int) {
         _totalSeatsToBeBooked.value = count
+        setRemainingSeatsToBeBooked(countTobeMinus = -count)
+    }
+
+    private fun setRemainingSeatsToBeBooked(countTobeMinus : Int) {
+        _remainingSeatsToBeBooked.value -= countTobeMinus
     }
 
     private fun availableSeatsForBooking(
@@ -79,7 +85,7 @@ class SeatSelectionViewModel : ViewModel() {
                 break
             }
         }
-        setTotalSeatsToBeBooked(count = _totalSeatsToBeBooked.value.minus(other = tempList.size))
+
         return tempList.toMutableList()
     }
 }

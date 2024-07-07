@@ -114,6 +114,9 @@ dependencies {
     implementation (libs.androidx.paging.compose)
     implementation (libs.androidx.paging.runtime)
 
-    //Lottiefiles
+    //Lottie files
     implementation(libs.lottie.compose)
+
+    //Material 1
+    implementation(libs.androidx.material)
 }

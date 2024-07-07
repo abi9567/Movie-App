@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -46,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import com.example.movieapp.R
 import com.example.movieapp.data.response.Seat
 import com.example.movieapp.internal.extensions.toPx
+import com.example.movieapp.ui.common.CustomGradientButton
 import com.example.movieapp.ui.common.CustomHeightSpacer
 import com.example.movieapp.ui.common.CustomWidthSpacer
 import com.example.movieapp.ui.theme.AppBackgroundColor
@@ -194,9 +196,14 @@ fun SingleSeatView(color : Color = SwitchBackgroundColor,
         .padding(all = dimensionResource(id = R.dimen.margin8))
         .size(size = 30.dp)
         .clip(shape = RoundedCornerShape(size = 10.dp))
-        .clickable(enabled = (seat?.seatNumber != null && seat.available == true), onClick = onClick)
-        .background(color = if (seat?.seatNumber == null) AppBackgroundColor
-        else if (isSeatSelected) PrimaryGradientColor else color),
+        .clickable(
+            enabled = (seat?.seatNumber != null && seat.available == true),
+            onClick = onClick
+        )
+        .background(
+            color = if (seat?.seatNumber == null) AppBackgroundColor
+            else if (isSeatSelected) PrimaryGradientColor else color
+        ),
         contentAlignment = Alignment.Center
     ) {
         if (seat?.seatNumber != null && seat.available == true) {
@@ -229,5 +236,33 @@ fun SingleAlphabetView(color : Color = YellowColor,
         Text(text = seatNumber ?: "",
             color = fontColor,
             style = MaterialTheme.typography.labelMedium)
+    }
+}
+
+@Composable
+fun SeatNumberSelectionBottomSheetView(
+    selectedSeatsCount : Int,
+    onClick: () -> Unit
+) {
+    Column(modifier = Modifier
+        .padding(horizontal = dimensionResource(id = R.dimen.margin16),
+            vertical = dimensionResource(id = R.dimen.margin24))
+        .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = stringResource(id = R.string.how_many_seats),
+            style = MaterialTheme.typography.bodyMedium)
+        CustomHeightSpacer(dimenResId = R.dimen.margin8)
+        Row(modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center) {
+            repeat(times = 10) { position ->
+                Text(text = "${position + 1}",
+                    modifier = Modifier.fillMaxWidth().weight(weight = 1F),
+                    style = MaterialTheme.typography.titleSmall)
+            }
+        }
+        CustomHeightSpacer(dimenResId = R.dimen.margin16)
+        CustomGradientButton(text = stringResource(id = R.string.select_seats),
+            onClick = onClick)
     }
 }

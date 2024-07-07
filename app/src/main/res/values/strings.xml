@@ -32,4 +32,6 @@
     <string name="available">Available</string>
     <string name="occupied">Occupied</string>
     <string name="chosen">Chosen</string>
+    <string name="how_many_seats">Select number of seats…</string>
+    <string name="select_seats">Select Seats</string>
 </resources>
