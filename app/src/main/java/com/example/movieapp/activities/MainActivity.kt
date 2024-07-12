@@ -5,13 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.navigation.compose.rememberNavController
-import com.example.movieapp.BuildConfig
 import com.example.movieapp.navigation.NavigationGraph
 import com.example.movieapp.ui.theme.MovieAppTheme
 import dagger.hilt.android.AndroidEntryPoint

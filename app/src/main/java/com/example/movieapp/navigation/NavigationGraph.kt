@@ -19,6 +19,8 @@ import com.example.movieapp.ui.screens.detailScreen.DetailScreen
 import com.example.movieapp.ui.screens.detailScreen.DetailViewModel
 import com.example.movieapp.ui.screens.homeScreen.HomeScreen
 import com.example.movieapp.ui.screens.homeScreen.HomeViewModel
+import com.example.movieapp.ui.screens.payTicketScreen.PayTicketScreen
+import com.example.movieapp.ui.screens.payTicketScreen.PayTicketViewModel
 import com.example.movieapp.ui.screens.searchScreen.SearchScreen
 import com.example.movieapp.ui.screens.searchScreen.SearchViewModel
 import com.example.movieapp.ui.screens.seatSelectionScreen.SeatSelectionScreen
@@ -32,7 +34,7 @@ fun NavigationGraph(navController : NavHostController) {
     Scaffold(containerColor = MaterialTheme.colorScheme.background) {
         SharedTransitionLayout {
                 NavHost(navController = navController,
-                    startDestination = Screen.SeatSelectionScreen.route) {
+                    startDestination = Screen.SplashScreen.route) {
 
                     composable(route = Screen.SplashScreen.route) {
                         SplashScreen(navController = navController,
@@ -73,6 +75,11 @@ fun NavigationGraph(navController : NavHostController) {
                         val viewModel : SeatSelectionViewModel = viewModel()
                         SeatSelectionScreen(navController = navController,
                             viewModel = viewModel)
+                    }
+
+                    composable(route = Screen.PayTicketScreen.route) {
+                        val viewModel = hiltViewModel<PayTicketViewModel>()
+                        PayTicketScreen(navController = navController, viewModel = viewModel)
                     }
                 }
         }

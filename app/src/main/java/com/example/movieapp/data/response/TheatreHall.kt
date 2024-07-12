@@ -76,12 +76,6 @@ data class Seat(
                 type = "VIP"
             ),
             Seat(
-                seatNumber = null,
-                available = null,
-                price = null,
-                type = null
-            ),
-            Seat(
                 seatNumber = "A8",
                 available = false,
                 price = 300,
@@ -106,14 +100,14 @@ data class Seat(
                 type = "VIP"
             ),
             Seat(
-                seatNumber = "A12",
-                available = false,
-                price = 300,
-                type = "VIP"
+                seatNumber = null,
+                available = null,
+                price = null,
+                type = null
             ),
             Seat(
-                seatNumber = "A13",
-                available = true,
+                seatNumber = "A12",
+                available = false,
                 price = 300,
                 type = "VIP"
             )
@@ -192,6 +186,12 @@ data class Seat(
                 type = "VIP"
             ),
             Seat(
+                seatNumber = null,
+                available = null,
+                price = null,
+                type = null
+            ),
+            Seat(
                 seatNumber = "B12",
                 available = false,
                 price = 300,
@@ -202,32 +202,26 @@ data class Seat(
                 available = true,
                 price = 300,
                 type = "VIP"
-            ),
-            Seat(
-                seatNumber = "B14",
-                available = false,
-                price = 300,
-                type = "VIP"
             )
         )
         val seatsC = listOf(
-            Seat(
-                seatNumber = null,
-                available = null,
-                price = null,
-                type = null
-            ),
-            Seat(
-                seatNumber = null,
-                available = null,
-                price = null,
-                type = null
-            ),
             Seat(
                 seatNumber = "C1",
                 available = true,
                 price = 250,
                 type = "Regular"
+            ),
+            Seat(
+                seatNumber = null,
+                available = null,
+                price = null,
+                type = null
+            ),
+            Seat(
+                seatNumber = null,
+                available = null,
+                price = null,
+                type = null
             ),
             Seat(
                 seatNumber = null,
@@ -284,6 +278,12 @@ data class Seat(
                 type = "VIP"
             ),
             Seat(
+                seatNumber = null,
+                available = null,
+                price = null,
+                type = null
+            ),
+            Seat(
                 seatNumber = "C10",
                 available = false,
                 price = 300,
@@ -294,32 +294,26 @@ data class Seat(
                 available = true,
                 price = 300,
                 type = "VIP"
-            ),
-            Seat(
-                seatNumber = "C12",
-                available = false,
-                price = 300,
-                type = "VIP"
             )
         )
         val seatsD = listOf(
-            Seat(
-                seatNumber = null,
-                available = null,
-                price = null,
-                type = null
-            ),
-            Seat(
-                seatNumber = null,
-                available = null,
-                price = null,
-                type = null
-            ),
             Seat(
                 seatNumber = "D1",
                 available = true,
                 price = 250,
                 type = "Regular"
+            ),
+            Seat(
+                seatNumber = null,
+                available = null,
+                price = null,
+                type = null
+            ),
+            Seat(
+                seatNumber = null,
+                available = null,
+                price = null,
+                type = null
             ),
             Seat(
                 seatNumber = null,
@@ -364,12 +358,6 @@ data class Seat(
                 type = "VIP"
             ),
             Seat(
-                seatNumber = null,
-                available = null,
-                price = null,
-                type = null
-            ),
-            Seat(
                 seatNumber = "D8",
                 available = false,
                 price = 300,
@@ -382,6 +370,12 @@ data class Seat(
                 type = "VIP"
             ),
             Seat(
+                seatNumber = null,
+                available = null,
+                price = null,
+                type = null
+            ),
+            Seat(
                 seatNumber = "D10",
                 available = false,
                 price = 300,
@@ -390,28 +384,28 @@ data class Seat(
             Seat(
                 seatNumber = "D11",
                 available = true,
-                price = 300,
+                price = 200,
                 type = "VIP"
             )
         )
         val seatsE = listOf(
             Seat(
-                seatNumber = null,
-                available = null,
-                price = null,
-                type = null
-            ),
-            Seat(
-                seatNumber = null,
-                available = null,
-                price = null,
-                type = null
-            ),
-            Seat(
                 seatNumber = "E1",
                 available = true,
                 price = 250,
                 type = "Regular"
+            ),
+            Seat(
+                seatNumber = null,
+                available = null,
+                price = null,
+                type = null
+            ),
+            Seat(
+                seatNumber = null,
+                available = null,
+                price = null,
+                type = null
             ),
             Seat(
                 seatNumber = null,
@@ -456,26 +450,26 @@ data class Seat(
                 type = "VIP"
             ),
             Seat(
+                seatNumber = "E8",
+                available = true,
+                price = 300,
+                type = "VIP"
+            ),
+            Seat(
+                seatNumber = "E9",
+                available = false,
+                price = 300,
+                type = "VIP"
+            ),
+            Seat(
                 seatNumber = null,
                 available = null,
                 price = null,
                 type = null
             ),
             Seat(
-                seatNumber = "E8",
-                available = false,
-                price = 300,
-                type = "VIP"
-            ),
-            Seat(
-                seatNumber = "E9",
-                available = true,
-                price = 300,
-                type = "VIP"
-            ),
-            Seat(
                 seatNumber = "E10",
-                available = false,
+                available = true,
                 price = 300,
                 type = "VIP"
             ),
@@ -483,7 +477,7 @@ data class Seat(
                 seatNumber = "E11",
                 available = true,
                 price = 300,
-                type = "VIP"
+                type = null
             )
         )
         val seatsF = listOf(
@@ -542,12 +536,6 @@ data class Seat(
                 type = "VIP"
             ),
             Seat(
-                seatNumber = null,
-                available = null,
-                price = null,
-                type = null
-            ),
-            Seat(
                 seatNumber = "F9",
                 available = true,
                 price = 300,
@@ -566,15 +554,21 @@ data class Seat(
                 type = "VIP"
             ),
             Seat(
+                seatNumber = null,
+                available = null,
+                price = null,
+                type = null
+            ),
+            Seat(
                 seatNumber = "F12",
-                available = false,
+                available = true,
                 price = 300,
                 type = "VIP"
             ),
             Seat(
                 seatNumber = "F13",
                 available = true,
-                price = 300,
+                price = 250,
                 type = "VIP"
             )
         )
@@ -628,12 +622,6 @@ data class Seat(
                 type = "VIP"
             ),
             Seat(
-                seatNumber = null,
-                available = null,
-                price = null,
-                type = null
-            ),
-            Seat(
                 seatNumber = "G8",
                 available = false,
                 price = 300,
@@ -658,6 +646,12 @@ data class Seat(
                 type = "VIP"
             ),
             Seat(
+                seatNumber = null,
+                available = null,
+                price = null,
+                type = null
+            ),
+            Seat(
                 seatNumber = "G12",
                 available = false,
                 price = 300,
@@ -665,8 +659,8 @@ data class Seat(
             ),
             Seat(
                 seatNumber = "G13",
-                available = true,
-                price = 300,
+                available = false,
+                price = 250,
                 type = "VIP"
             )
         )
@@ -732,9 +726,9 @@ data class Seat(
                 type = "VIP"
             ),
             Seat(
-                seatNumber = null,
-                available = null,
-                price = null,
+                seatNumber = "H10",
+                available = true,
+                price = 255,
                 type = null
             ),
             Seat(
@@ -742,6 +736,12 @@ data class Seat(
                 available = true,
                 price = 300,
                 type = "VIP"
+            ),
+            Seat(
+                seatNumber = null,
+                available = null,
+                price = null,
+                type = null
             ),
             Seat(
                 seatNumber = "H12",
@@ -754,12 +754,6 @@ data class Seat(
                 available = true,
                 price = 300,
                 type = "VIP"
-            ),
-            Seat(
-                seatNumber = null,
-                available = null,
-                price = null,
-                type = null
             )
         )
     }

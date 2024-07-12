@@ -16,3 +16,4 @@ val RatingGradientBrush = Brush.verticalGradient(colors = listOf(MidnightBlue.co
 val SwitchBackgroundColor = Color(color = 0xFF253554)
 val SwitchBackgroundBrush = Brush.linearGradient(colors = listOf(SwitchBackgroundColor, SwitchBackgroundColor))
 val BottomSheetBackgroundColor = Color(0xFF1A2435)
+val AppBackgroundColorGradient = Brush.linearGradient(colors = listOf(AppBackgroundColor, AppBackgroundColor))

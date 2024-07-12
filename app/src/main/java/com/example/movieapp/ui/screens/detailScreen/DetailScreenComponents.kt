@@ -208,11 +208,13 @@ fun ReviewSingleView(comment : Comment?, modifier : Modifier) {
 }
 
 @Composable
-fun MovieBookingSingleRowWithTheatreName() {
+fun MovieBookingSingleRowWithTheatreName(
+    onClick: () -> Unit
+) {
 
     Column(modifier = Modifier
         .height(intrinsicSize = IntrinsicSize.Max)
-        .clickable { }
+        .clickable { onClick() }
         .padding(vertical = dimensionResource(id = R.dimen.margin16))
         .fillMaxWidth(),
         verticalArrangement = Arrangement.Center

@@ -24,7 +24,7 @@ class DetailViewModel @Inject constructor(private val repository : Repository,
     savedStateHandle : SavedStateHandle
     ) : ViewModel() {
 
-    private val _selectedTab = MutableStateFlow(value = DetailScreenTabs.Booking)
+    private val _selectedTab = MutableStateFlow(value = DetailScreenTabs.About)
     val selectedTab : Flow<DetailScreenTabs> = _selectedTab
 
     private val _movieDetail = MutableStateFlow<Resource<MovieDetail>?>(null)
@@ -56,11 +56,11 @@ class DetailViewModel @Inject constructor(private val repository : Repository,
     }
 
     init {
-//        fetchMovieDetail()
-//        fetchRecommendations()
-//        getCredits()
-//        getComments()
-//        getYoutubeUrl()
+        fetchMovieDetail()
+        fetchRecommendations()
+        getCredits()
+        getComments()
+        getYoutubeUrl()
     }
 
     private fun fetchMovieDetail() {

@@ -4,6 +4,14 @@ import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class HiltAndroidApp() : Application() {
-
+class HiltApplication() : Application() {
+//    companion object {
+//        private lateinit var instance : HiltApplication
+//        fun get() = instance
+//    }
+//
+//    override fun onCreate() {
+//        super.onCreate()
+//        instance = this
+//    }
 }

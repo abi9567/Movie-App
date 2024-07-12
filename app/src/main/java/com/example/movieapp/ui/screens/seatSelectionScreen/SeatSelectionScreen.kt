@@ -1,11 +1,20 @@
 package com.example.movieapp.ui.screens.seatSelectionScreen
 
+import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -29,6 +38,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -42,12 +52,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.movieapp.R
+import com.example.movieapp.navigation.Screen
 import com.example.movieapp.ui.common.CustomHeightSpacer
 import com.example.movieapp.ui.common.CustomModalBottomSheetLayout
 import com.example.movieapp.ui.common.CustomScaffold
 import com.example.movieapp.ui.common.CustomTopBar
 import com.example.movieapp.ui.common.CustomWidthSpacer
 import com.example.movieapp.ui.theme.AppBackgroundColor
+import com.example.movieapp.ui.theme.ButtonGradientBrush
+import com.example.movieapp.ui.theme.PrimaryGradientColor
 import com.example.movieapp.ui.theme.SecondaryLightColor
 import com.example.movieapp.ui.theme.YellowColor
 import kotlinx.coroutines.launch
@@ -57,25 +70,45 @@ import kotlinx.coroutines.launch
 fun SeatSelectionScreen(navController : NavController,
                         viewModel : SeatSelectionViewModel) {
 
+    val scope = rememberCoroutineScope()
     val theatreLayoutMap = viewModel.theatreHallSeatList.layout
     val selectedSeats by viewModel.selectedSeats.collectAsState(initial = null)
-    val bottomSheetScaffoldState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-    val scope = rememberCoroutineScope()
-
+    val bottomSheetScaffoldState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        confirmValueChange = { false })
     var screenWidth by remember { mutableIntStateOf(value = 0) }
     val verticalScrollState = rememberScrollState()
     val horizontalScrollState = rememberScrollState()
     val isVisible by remember { derivedStateOf { horizontalScrollState.value > screenWidth / 4 } }
-    val totalTicketsTobeBooked by viewModel.totalSeatsToBeBooked.collectAsState(initial = 0)
-    val animatedSeatCount by animateIntAsState(targetValue = totalTicketsTobeBooked, label = "Animated Ticket Count")
+    val totalTicketsTobeBooked by viewModel.totalSeatsToBeBooked.collectAsState(initial = 1)
+    val animatedSeatCount by animateIntAsState(targetValue = totalTicketsTobeBooked,
+        animationSpec = tween(easing = LinearEasing, durationMillis = 300),
+        label = "Animated Ticket Count")
+    val bookingAmount by viewModel.totalAmount.collectAsState(initial = null)
+
+    val animatedBookingAmount by animateIntAsState(targetValue = bookingAmount ?: 0,
+        animationSpec = tween(easing = LinearEasing),
+        label = "Amount Animated Amount")
+
+    var onSwipeEnd by remember { mutableStateOf(value = true) }
 
     LaunchedEffect(key1 = screenWidth) {
         horizontalScrollState.scrollTo(value = screenWidth / 4)
     }
 
+    BackHandler(enabled = true) {
+        if (bottomSheetScaffoldState.isVisible) return@BackHandler
+        navController.navigateUp()
+    }
+
     CustomModalBottomSheetLayout(sheetContent = {
-        SeatNumberSelectionBottomSheetView(selectedSeatsCount = 5,
-            onClick = { scope.launch { bottomSheetScaffoldState.hide() } }) },
+        SeatNumberSelectionBottomSheetView(selectedSeatsCount = totalTicketsTobeBooked,
+            onClick = { selectedSeatsCount ->
+                scope.launch { bottomSheetScaffoldState.hide() }
+                if (selectedSeatsCount == totalTicketsTobeBooked) return@SeatNumberSelectionBottomSheetView
+                viewModel.setTotalSeatsToBeBooked(count = selectedSeatsCount, resetSeatCount = true)
+            }) },
+
         sheetState = bottomSheetScaffoldState) {
         CustomScaffold(topBar = {
             CustomTopBar(text = "Eurasia Cinemas",
@@ -102,7 +135,7 @@ fun SeatSelectionScreen(navController : NavController,
                         Column(modifier = Modifier
                             .clip(shape = CircleShape)
                             .clickable { scope.launch { bottomSheetScaffoldState.show() } }
-                            .background(color = SecondaryLightColor)
+                            .background(brush = ButtonGradientBrush)
                             .size(size = 32.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
@@ -118,76 +151,94 @@ fun SeatSelectionScreen(navController : NavController,
                 },
                 onNavigationButtonClick = { navController.navigateUp() })
         }) { paddingValues ->
-            Column(modifier = Modifier
-                .padding(paddingValues = paddingValues)
-                .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(all = dimensionResource(id = R.dimen.margin16)),
-                    horizontalArrangement = Arrangement.Center,
+
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues = paddingValues)) {
+                Column(modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    AvailableSeatView()
-                    CustomWidthSpacer(dimenResId = R.dimen.margin24)
-                    OccupiedSeatView()
-                    CustomWidthSpacer(dimenResId = R.dimen.margin24)
-                    ChosenSeatView()
+                    Row(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(all = dimensionResource(id = R.dimen.margin16)),
+                        horizontalArrangement = Arrangement.Center,
+                    ) {
+                        AvailableSeatView()
+                        CustomWidthSpacer(dimenResId = R.dimen.margin24)
+                        OccupiedSeatView()
+                        CustomWidthSpacer(dimenResId = R.dimen.margin24)
+                        ChosenSeatView()
+                    }
+
+                    CustomHeightSpacer(dimenResId = R.dimen.margin16)
+
+                    Row(verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        AnimatedVisibility(visible = !isVisible) {
+                            Column(modifier = Modifier
+                                .background(color = AppBackgroundColor.copy(alpha = 0.35F))
+                                .verticalScroll(state = verticalScrollState))
+                            {
+                                Spacer(modifier = Modifier.height(height = 50.dp))
+
+                                repeat(times = theatreLayoutMap.size) { position ->
+                                    val seatNumber = theatreLayoutMap.keys.elementAt(index = position)
+                                    SingleAlphabetView(seatNumber = seatNumber,
+                                        fontColor = AppBackgroundColor,
+                                        color = YellowColor
+                                    )
+                                }
+                                Spacer(modifier = Modifier.height(height = 16.dp))
+                            }
+                        }
+
+                        Row(modifier = Modifier
+                            .weight(weight = 1F)
+                            .verticalScroll(state = verticalScrollState)
+                            .horizontalScroll(state = horizontalScrollState)
+                            .onGloballyPositioned { screenWidth = it.size.width },
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            SeatView(alphabetList = theatreLayoutMap,
+                                onSeatItemClick = viewModel::addOrRemoveSeat,
+                                selectedSeats = selectedSeats)
+                        }
+
+                        AnimatedVisibility(visible = isVisible) {
+                            Column(modifier = Modifier
+                                .background(color = AppBackgroundColor.copy(alpha = 0.35F))
+                                .verticalScroll(state = verticalScrollState)) {
+
+                                Spacer(modifier = Modifier.height(height = 50.dp))
+
+                                repeat(times = theatreLayoutMap.size) { position ->
+                                    val seatNumber = theatreLayoutMap.keys.elementAt(index = position)
+                                    SingleAlphabetView(seatNumber = seatNumber,
+                                        fontColor = AppBackgroundColor,
+                                        color = YellowColor
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.height(height = 16.dp))
+                            }
+                        }
+                    }
                 }
 
-                CustomHeightSpacer(dimenResId = R.dimen.margin16)
-
-                Row(verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxSize()
+                AnimatedVisibility(visible = bookingAmount != null,
+                    enter = slideInVertically { it },
+                    exit = slideOutVertically { 2 * it },
+                    modifier = Modifier
+                        .padding(all = dimensionResource(id = R.dimen.margin16))
+                        .align(alignment = Alignment.BottomCenter)
                 ) {
-                    AnimatedVisibility(visible = !isVisible) {
-                        Column(modifier = Modifier
-                            .background(color = AppBackgroundColor.copy(alpha = 0.35F))
-                            .verticalScroll(state = verticalScrollState))
-                        {
-                            Spacer(modifier = Modifier.height(height = 50.dp))
-
-                            repeat(times = theatreLayoutMap.size) { position ->
-                                val seatNumber = theatreLayoutMap.keys.elementAt(index = position)
-                                SingleAlphabetView(seatNumber = seatNumber,
-                                    fontColor = AppBackgroundColor,
-                                    color = YellowColor
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(height = 16.dp))
+                    BuyTicketView(amount = animatedBookingAmount,
+                        onSwipeEnd = {
+                            Log.d("SeatSelectionScreen", "onSwipeEnd")
+                            navController.navigate(route = Screen.PayTicketScreen.route)
                         }
-                    }
-
-                    Row(modifier = Modifier
-                        .weight(weight = 1F)
-                        .verticalScroll(state = verticalScrollState)
-                        .horizontalScroll(state = horizontalScrollState)
-                        .onGloballyPositioned { screenWidth = it.size.width },
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        SeatView(alphabetList = theatreLayoutMap,
-                            onSeatItemClick = viewModel::addOrRemoveSeat,
-                            selectedSeats = selectedSeats)
-                    }
-
-                    AnimatedVisibility(visible = isVisible) {
-                        Column(modifier = Modifier
-                            .background(color = AppBackgroundColor.copy(alpha = 0.35F))
-                            .verticalScroll(state = verticalScrollState)) {
-
-                            Spacer(modifier = Modifier.height(height = 50.dp))
-
-                            repeat(times = theatreLayoutMap.size) { position ->
-                                val seatNumber = theatreLayoutMap.keys.elementAt(index = position)
-                                SingleAlphabetView(seatNumber = seatNumber,
-                                    fontColor = AppBackgroundColor,
-                                    color = YellowColor
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.height(height = 16.dp))
-                        }
-                    }
+                    )
                 }
             }
         }

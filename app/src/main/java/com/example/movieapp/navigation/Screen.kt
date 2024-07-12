@@ -12,6 +12,7 @@ sealed class Screen(val route : String) {
     }
     data object SearchScreen : Screen(route = "search_screen")
     data object SeatSelectionScreen : Screen(route = "seat_selection_screen")
+    data object PayTicketScreen : Screen(route = "pay_ticket_screen")
 
     companion object Args {
         const val MOVIE_ID = "movie_id"

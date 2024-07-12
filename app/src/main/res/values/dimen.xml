@@ -8,4 +8,5 @@
     <dimen name="margin32">32dp</dimen>
     <dimen name="margin40">40dp</dimen>
     <dimen name="margin48">48dp</dimen>
+    <dimen name="margin64">64dp</dimen>
 </resources>

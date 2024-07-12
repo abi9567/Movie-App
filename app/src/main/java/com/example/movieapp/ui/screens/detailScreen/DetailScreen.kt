@@ -38,7 +38,7 @@ fun DetailScreen(
     viewModel : DetailViewModel
 ) {
     val context = LocalContext.current
-    val selectedTab by viewModel.selectedTab.collectAsState(initial = DetailScreenTabs.Booking)
+    val selectedTab by viewModel.selectedTab.collectAsState(initial = DetailScreenTabs.About)
     val movieDetail by viewModel.movieDetail.collectAsState(initial = null)
     val recommendations by viewModel.recommendations.collectAsState(initial = null)
     val comments by viewModel.reviews.collectAsState(initial = null)
@@ -109,7 +109,11 @@ fun DetailScreen(
                             )
                         }
 
-                        else -> { SessionsView(viewModel = viewModel) }
+                        else -> { SessionsView(viewModel = viewModel,
+                            onClick = {
+                                navController.navigate(route = Screen.SeatSelectionScreen.route)
+                            }
+                        ) }
                     }
                 }
 //                else -> { }

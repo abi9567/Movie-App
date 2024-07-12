@@ -34,7 +34,8 @@ import com.example.movieapp.ui.theme.TextFieldBorderColor
 
 @Composable
 fun SessionsView(
-    viewModel : DetailViewModel
+    viewModel : DetailViewModel,
+    onClick : () -> Unit
 ) {
 
     val isChecked by viewModel.isChecked.collectAsState(initial = false)
@@ -116,7 +117,9 @@ fun SessionsView(
             contentPadding = PaddingValues(vertical = dimensionResource(id = R.dimen.margin16))
         ) {
             items(count = 10) { position ->
-                MovieBookingSingleRowWithTheatreName()
+                MovieBookingSingleRowWithTheatreName(
+                    onClick = onClick
+                )
                 if (position != 9) {
                     HorizontalDivider(modifier = Modifier.fillMaxWidth(),
                         color = TextFieldBorderColor)
