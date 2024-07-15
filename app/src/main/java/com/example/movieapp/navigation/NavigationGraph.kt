@@ -34,7 +34,7 @@ fun NavigationGraph(navController : NavHostController) {
     Scaffold(containerColor = MaterialTheme.colorScheme.background) {
         SharedTransitionLayout {
                 NavHost(navController = navController,
-                    startDestination = Screen.SeatSelectionScreen.route) {
+                    startDestination = Screen.SplashScreen.route) {
 
                     composable(route = Screen.SplashScreen.route) {
                         SplashScreen(navController = navController,
