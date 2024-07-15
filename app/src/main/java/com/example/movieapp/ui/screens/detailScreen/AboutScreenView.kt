@@ -187,7 +187,7 @@ fun AboutScreenView(movieDetail : MovieDetail?,
                 )
                 CustomHeightSpacer(dimenResId = R.dimen.margin8)
 
-                movieDetail?.availableLanguages?.get(index = 0)?.name?.let {
+                movieDetail?.availableLanguages?.getOrNull(index = 0)?.name?.let {
                     DetailScreenTitleDescriptionView(
                         title = stringResource(id = R.string.language),
                         description = it
