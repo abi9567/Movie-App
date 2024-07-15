@@ -59,12 +59,15 @@ import com.example.movieapp.ui.common.CustomGradientButton
 import com.example.movieapp.ui.common.CustomHeightSpacer
 import com.example.movieapp.ui.common.CustomWidthSpacer
 import com.example.movieapp.ui.theme.AppBackgroundColor
+import com.example.movieapp.ui.theme.BottomSheetBackgroundColor
 import com.example.movieapp.ui.theme.ButtonGradientBrush
 import com.example.movieapp.ui.theme.MidnightBlue
+import com.example.movieapp.ui.theme.PrimaryColor
 import com.example.movieapp.ui.theme.PrimaryGradientColor
 import com.example.movieapp.ui.theme.SecondaryLightColor
 import com.example.movieapp.ui.theme.SwitchBackgroundColor
 import com.example.movieapp.ui.theme.TextFieldBorderColor
+import com.example.movieapp.ui.theme.WhiteGradientBrush
 import com.example.movieapp.ui.theme.YellowColor
 import kotlinx.coroutines.withTimeout
 
@@ -438,5 +441,57 @@ fun BuyTicketView(
                 style = MaterialTheme.typography.headlineMedium)
             }
         }
+    }
+}
+
+@Composable
+fun SingleDateView(
+    item : Pair<String, String>,
+    isSelected : Boolean,
+    onClick : () -> Unit
+) {
+    Column(modifier = Modifier
+        .clip(shape = CircleShape)
+        .clickable { onClick() }
+        .background(color = if (isSelected) PrimaryGradientColor else SwitchBackgroundColor)
+        .padding(all = dimensionResource(id = R.dimen.margin4)),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center) {
+
+        Text(text = item.first,
+            color = Color.White,
+            style = MaterialTheme.typography.labelMedium)
+
+        CustomHeightSpacer(dimenResId = R.dimen.margin4)
+
+        Box(modifier = Modifier
+            .clip(shape = CircleShape)
+            .size(size = 22.dp)
+            .background(color = if (isSelected) Color.White else SecondaryLightColor),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = item.second,
+                style = MaterialTheme.typography.bodyMedium,
+                color = if (isSelected) PrimaryGradientColor else Color.Black)
+        }
+    }
+}
+
+@Composable
+fun SingleTimeView(isSelected : Boolean,
+                   onClick : () -> Unit,
+                   time : String) {
+
+    Box(modifier = Modifier
+        .clip(shape = MaterialTheme.shapes.medium)
+        .clickable { onClick() }
+        .background(color = if (isSelected) PrimaryGradientColor else SwitchBackgroundColor)
+        .padding(horizontal = dimensionResource(id = R.dimen.margin8),
+            vertical = dimensionResource(id = R.dimen.margin4)),
+        contentAlignment = Alignment.Center) {
+
+        Text(text = time,
+            style = MaterialTheme.typography.bodyMedium,
+            color = Color.White)
     }
 }

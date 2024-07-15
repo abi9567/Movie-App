@@ -3,10 +3,10 @@ package com.example.movieapp.ui.screens.seatSelectionScreen
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateIntAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -16,6 +16,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +24,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -38,7 +41,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -52,6 +54,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.movieapp.R
+import com.example.movieapp.internal.enums.DateSelectionEnum
 import com.example.movieapp.navigation.Screen
 import com.example.movieapp.ui.common.CustomHeightSpacer
 import com.example.movieapp.ui.common.CustomModalBottomSheetLayout
@@ -60,6 +63,7 @@ import com.example.movieapp.ui.common.CustomTopBar
 import com.example.movieapp.ui.common.CustomWidthSpacer
 import com.example.movieapp.ui.theme.AppBackgroundColor
 import com.example.movieapp.ui.theme.ButtonGradientBrush
+import com.example.movieapp.ui.theme.MidnightBlue
 import com.example.movieapp.ui.theme.PrimaryGradientColor
 import com.example.movieapp.ui.theme.SecondaryLightColor
 import com.example.movieapp.ui.theme.YellowColor
@@ -90,7 +94,12 @@ fun SeatSelectionScreen(navController : NavController,
         animationSpec = tween(easing = LinearEasing),
         label = "Amount Animated Amount")
 
-    var onSwipeEnd by remember { mutableStateOf(value = true) }
+    val currentPicker by viewModel.currentPickerSelection.collectAsState(initial = DateSelectionEnum.NotVisible)
+    val nextDaysList = viewModel.nextDaysList
+    val selectedDate by viewModel.selectedDate.collectAsState(initial = nextDaysList.getOrNull(index = 0))
+
+    val timeList = viewModel.timeList
+    val selectedTime by viewModel.selectedTime.collectAsState(initial = timeList.getOrNull(index = 0))
 
     LaunchedEffect(key1 = screenWidth) {
         horizontalScrollState.scrollTo(value = screenWidth / 4)
@@ -113,51 +122,90 @@ fun SeatSelectionScreen(navController : NavController,
         CustomScaffold(topBar = {
             CustomTopBar(text = "Eurasia Cinemas",
                 description = "The Batman",
-                bottomComposableView = {
-                    Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = dimensionResource(id = R.dimen.margin16)),
-                        verticalAlignment = Alignment.CenterVertically) {
-                        IconTextView(icon = R.drawable.ic_calendar,
-                            modifier = Modifier.weight(weight = 1F),
-                            onClick = {  },
-                            text = "Apr 14")
-
-                        CustomWidthSpacer(dimenResId = R.dimen.margin16)
-
-                        IconTextView(icon = R.drawable.ic_clock,
-                            modifier = Modifier.weight(weight = 1F),
-                            onClick = {  },
-                            text = "15 : 10")
-
-                        CustomWidthSpacer(dimenResId = R.dimen.margin16)
-                        
-                        Column(modifier = Modifier
-                            .clip(shape = CircleShape)
-                            .clickable { scope.launch { bottomSheetScaffoldState.show() } }
-                            .background(brush = ButtonGradientBrush)
-                            .size(size = 32.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Text(text = "$animatedSeatCount",
-                                style = MaterialTheme.typography.titleSmall)
-                            Icon(painter = painterResource(id = R.drawable.ic_edit),
-                                tint = Color.White,
-                                contentDescription = null)
-                        }
-                        
-                    }
-                },
                 onNavigationButtonClick = { navController.navigateUp() })
         }) { paddingValues ->
 
             Box(modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues = paddingValues)) {
+
                 Column(modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    Column(modifier = Modifier
+                        .background(color = MidnightBlue.copy(alpha = 0.7F))
+                        .animateContentSize()
+                        .fillMaxWidth())
+                    {
+                        Row(modifier = Modifier
+                            .animateContentSize()
+                            .fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically)
+                        {
+                            IconTextView(icon = R.drawable.ic_calendar,
+                                modifier = Modifier
+                                    .padding(start = dimensionResource(id = R.dimen.margin16))
+                                    .weight(weight = 1F),
+                                onClick = { viewModel.setPicker(item = DateSelectionEnum.Date) },
+                                text = selectedDate?.first + " " + selectedDate?.second)
+
+                            CustomWidthSpacer(dimenResId = R.dimen.margin16)
+
+                            IconTextView(icon = R.drawable.ic_clock,
+                                modifier = Modifier.weight(weight = 1F),
+                                onClick = { viewModel.setPicker(item = DateSelectionEnum.Time) },
+                                text = selectedTime ?: "")
+
+                            CustomWidthSpacer(dimenResId = R.dimen.margin16)
+
+                            Column(modifier = Modifier
+                                .padding(end = dimensionResource(id = R.dimen.margin16))
+                                .clip(shape = CircleShape)
+                                .clickable { scope.launch { bottomSheetScaffoldState.show() } }
+                                .background(brush = ButtonGradientBrush)
+                                .size(size = 32.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Text(text = "$animatedSeatCount",
+                                    style = MaterialTheme.typography.titleSmall)
+                                Icon(painter = painterResource(id = R.drawable.ic_edit),
+                                    tint = Color.White,
+                                    contentDescription = null)
+                            }
+                        }
+
+                        AnimatedVisibility (visible = currentPicker != DateSelectionEnum.NotVisible,
+                            enter = slideInVertically(animationSpec = tween()) { -it },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            LazyRow(modifier = Modifier
+                                .padding(top = dimensionResource(id = R.dimen.margin16))
+                                .animateContentSize(),
+                                contentPadding = PaddingValues(horizontal = dimensionResource(id = R.dimen.margin16)),
+                                horizontalArrangement = Arrangement
+                                    .spacedBy(space = dimensionResource(id = R.dimen.margin16))
+                            ) {
+                                if (currentPicker == DateSelectionEnum.Date) {
+                                    items(nextDaysList) { date ->
+                                        SingleDateView(item = date,
+                                            onClick = { viewModel.setDate(date = date) },
+                                            isSelected = selectedDate == date)
+                                    }
+                                } else if (currentPicker == DateSelectionEnum.Time) {
+                                    items(timeList) { time ->
+                                        SingleTimeView(isSelected = time == selectedTime,
+                                            time = time,
+                                            onClick = { viewModel.setTime(time = time) })
+                                    }
+                                }
+                            }
+                        }
+
+                        CustomHeightSpacer(dimenResId = R.dimen.margin16)
+
+                    }
+
                     Row(modifier = Modifier
                         .fillMaxWidth()
                         .padding(all = dimensionResource(id = R.dimen.margin16)),

@@ -3,8 +3,11 @@ package com.example.movieapp.ui.screens.seatSelectionScreen
 import androidx.lifecycle.ViewModel
 import com.example.movieapp.data.response.Seat
 import com.example.movieapp.data.response.TheatreHall
+import com.example.movieapp.internal.enums.DateSelectionEnum
+import com.example.movieapp.utils.other.Utils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import java.util.Calendar
 
 class SeatSelectionViewModel : ViewModel() {
 
@@ -20,6 +23,34 @@ class SeatSelectionViewModel : ViewModel() {
 
     private val _totalAmount = MutableStateFlow<Int?>(value = null)
     val totalAmount : Flow<Int?> = _totalAmount
+
+    private val _currentPickerSelection = MutableStateFlow(value = DateSelectionEnum.NotVisible)
+    val currentPickerSelection : Flow<DateSelectionEnum> = _currentPickerSelection
+
+    private val calendar = Calendar.getInstance()
+    private val time = calendar.time.time
+    private val calculationValue : Long = 86400000
+    private val nextDaysListInMilliSecond = listOf(
+        (time + 0 * calculationValue),
+        (time + 1 * calculationValue),
+        (time + 2 * calculationValue),
+        (time + 3 * calculationValue),
+        (time + 4 * calculationValue),
+        (time + 5 * calculationValue),
+        (time + 6 * calculationValue),
+        (time + 7 * calculationValue),
+        (time + 8 * calculationValue),
+        (time + 9 * calculationValue),
+    )
+
+    val nextDaysList = nextDaysListInMilliSecond.map { Utils.convertToDate(time = it) }
+    val timeList = listOf("10 AM", "1 PM", "4 PM", "6 PM", "8 PM", "11 PM")
+
+    private val _selectedDate = MutableStateFlow(nextDaysList.get(index = 0))
+    val selectedDate : Flow<Pair<String, String>> = _selectedDate
+
+    private val _selectedTime = MutableStateFlow(timeList.get(index = 0))
+    val selectedTime : Flow<String> = _selectedTime
 
     init {
         setTotalSeatsToBeBooked(count = 1)
@@ -39,6 +70,24 @@ class SeatSelectionViewModel : ViewModel() {
         _selectedSeats.value = null
         _remainingSeatsToBeBooked.value = _totalSeatsToBeBooked.value
         _totalAmount.value = null
+    }
+
+    fun setDate(date : Pair<String, String>) {
+        _selectedDate.value = date
+        setPicker(item = DateSelectionEnum.NotVisible)
+    }
+
+    fun setTime(time : String) {
+        _selectedTime.value = time
+        setPicker(item = DateSelectionEnum.NotVisible)
+    }
+
+    fun setPicker(item : DateSelectionEnum) {
+        if (_currentPickerSelection.value == item) {
+            _currentPickerSelection.value = DateSelectionEnum.NotVisible
+            return
+        }
+        _currentPickerSelection.value = item
     }
 
     private fun addSeat(item : Seat?) {

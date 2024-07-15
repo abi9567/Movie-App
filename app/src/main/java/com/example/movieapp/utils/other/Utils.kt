@@ -74,4 +74,13 @@ object Utils {
         startActivityLauncher.launch(intent)
     }
 
+    fun convertToDate(time : Long) : Pair<String, String> {
+        val calendarDate = Date(time)
+        val monthFormat = SimpleDateFormat("MMM", Locale.US)
+        val dateFormat = SimpleDateFormat("dd", Locale.US)
+        val month = monthFormat.format(calendarDate)
+        val date = dateFormat.format(calendarDate)
+        return Pair(month, date)
+    }
+
 }

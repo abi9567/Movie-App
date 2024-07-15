@@ -31,8 +31,7 @@ fun CustomTopBar(
     description : String? = null,
     onNavigationButtonClick : (() -> Unit)? = null,
     onActionButtonClick : (() -> Unit)? = null,
-    @DrawableRes actionButtonResId : Int? = null,
-    bottomComposableView : (@Composable () -> Unit)? = null
+    @DrawableRes actionButtonResId : Int? = null
 ) {
 
     val isIconsVisible = !(onNavigationButtonClick == null && onActionButtonClick == null)
@@ -75,11 +74,6 @@ fun CustomTopBar(
                         overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.bodyLarge.copy(color = SecondaryLightColor))
                 }
-            }
-
-            bottomComposableView?.let {
-                CustomHeightSpacer(dimenResId = R.dimen.margin24)
-                it()
             }
         }
 
