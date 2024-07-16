@@ -16,7 +16,7 @@ class SeatSelectionViewModel : ViewModel() {
     private val _selectedSeats = MutableStateFlow<MutableSet<Seat?>?>(value = null)
     val selectedSeats : Flow<MutableSet<Seat?>?> = _selectedSeats
 
-    private val _totalSeatsToBeBooked = MutableStateFlow(value = 1)
+    private val _totalSeatsToBeBooked = MutableStateFlow(value = 2)
     val totalSeatsToBeBooked : Flow<Int> = _totalSeatsToBeBooked
 
     private val _remainingSeatsToBeBooked = MutableStateFlow(value = 0)
@@ -53,7 +53,7 @@ class SeatSelectionViewModel : ViewModel() {
     val selectedTime : Flow<String> = _selectedTime
 
     init {
-        setTotalSeatsToBeBooked(count = 1)
+        setTotalSeatsToBeBooked(count = 2)
     }
 
     fun addOrRemoveSeat(item : Seat?) {

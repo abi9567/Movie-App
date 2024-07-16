@@ -84,7 +84,7 @@ fun SeatSelectionScreen(navController : NavController,
     val verticalScrollState = rememberScrollState()
     val horizontalScrollState = rememberScrollState()
     val isVisible by remember { derivedStateOf { horizontalScrollState.value > screenWidth / 4 } }
-    val totalTicketsTobeBooked by viewModel.totalSeatsToBeBooked.collectAsState(initial = 1)
+    val totalTicketsTobeBooked by viewModel.totalSeatsToBeBooked.collectAsState(initial = 2)
     val animatedSeatCount by animateIntAsState(targetValue = totalTicketsTobeBooked,
         animationSpec = tween(easing = LinearEasing, durationMillis = 300),
         label = "Animated Ticket Count")
