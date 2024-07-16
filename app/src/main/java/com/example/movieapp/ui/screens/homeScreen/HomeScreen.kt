@@ -28,7 +28,6 @@ import com.example.movieapp.R
 import com.example.movieapp.ui.common.CustomGradientButton
 import com.example.movieapp.ui.common.CustomScaffold
 import com.example.movieapp.ui.common.CustomWidthSpacer
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable

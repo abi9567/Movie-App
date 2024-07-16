@@ -122,4 +122,7 @@ dependencies {
 
     //Splash Screen
     implementation (libs.androidx.core.splashscreen)
+
+    //In App Updates
+    implementation(libs.app.update.ktx)
 }
