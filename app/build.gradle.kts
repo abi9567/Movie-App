@@ -119,4 +119,7 @@ dependencies {
 
     //Material 1
     implementation(libs.androidx.material)
+
+    //Splash Screen
+    implementation (libs.androidx.core.splashscreen)
 }
