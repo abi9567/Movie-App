@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.de.undercouch.gradle.tasks.download.org.apache.commons.logging.LogFactory.release
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -14,14 +15,15 @@ appProperties.load(FileInputStream(appPropertiesFile))
 
 android {
 
-    namespace = "com.example.movieapp"
+
+    namespace = "com.abi.movieapp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.movieapp"
+        applicationId = "com.abi.movieapp"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
+        versionCode = 2
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -29,6 +31,7 @@ android {
             useSupportLibrary = true
         }
     }
+
 
     buildTypes {
         release {
