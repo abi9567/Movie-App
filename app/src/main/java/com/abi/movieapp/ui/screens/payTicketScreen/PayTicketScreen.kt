@@ -18,15 +18,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.abi.movieapp.R
 import com.abi.movieapp.internal.enums.PaymentScreen
+import com.abi.movieapp.internal.extensions.showToast
 import com.abi.movieapp.ui.common.CustomGradientButton
 import com.abi.movieapp.ui.common.CustomHeightSpacer
 import com.abi.movieapp.ui.common.CustomLoading
@@ -40,7 +45,9 @@ fun PayTicketScreen(
     navController : NavController,
     viewModel : PayTicketViewModel
 ) {
+    val context = LocalContext.current
     val paymentScreenEnum by viewModel.paymentScreenEnum.collectAsState(initial = PaymentScreen.MobileNumberView)
+    var mobileNumber by remember { mutableStateOf<String?>(value = null) }
 
     CustomScaffold(topBar = {
         CustomTopBar(text = stringResource(id = R.string.pay_for_tickets),
@@ -157,9 +164,11 @@ fun PayTicketScreen(
                         AnimatedVisibility(visibleState = remember {
                             MutableTransitionState(initialState = false).apply { targetState = true }
                         }) {
-                            CustomTextBoxView(value = "",
+                            CustomTextBoxView(value = mobileNumber,
+                                keyboardType = KeyboardType.NumberPassword,
                                 modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.margin16)),
-                                onValueChane = {},
+                                onValueChane = { if ((it?.length ?: 0) > 10) return@CustomTextBoxView
+                                    mobileNumber = it },
                                 placeHolderText = stringResource(id = R.string.phone_number))
                         }
                     }
@@ -239,6 +248,10 @@ fun PayTicketScreen(
                     onClick = {
                         when(paymentScreenEnum) {
                             PaymentScreen.MobileNumberView -> {
+                                if (mobileNumber.isNullOrEmpty() && mobileNumber?.length != 10) {
+                                    context.showToast(message = context.getString(R.string.enter_correct_phone_number))
+                                    return@CustomGradientButton
+                                }
                                 viewModel.setPhoneNumberEntered()
                             }
                             PaymentScreen.SelectPaymentMethodView -> {

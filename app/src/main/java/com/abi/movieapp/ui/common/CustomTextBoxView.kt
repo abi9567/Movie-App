@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import com.abi.movieapp.ui.theme.SecondaryLightColor
 import com.abi.movieapp.ui.theme.TextFieldBorderColor
 
@@ -20,7 +21,8 @@ fun CustomTextBoxView(
     modifier : Modifier = Modifier,
     value : String?,
     onValueChane : (String?) -> Unit,
-    placeHolderText : String?
+    placeHolderText : String?,
+    keyboardType : KeyboardType = KeyboardType.Text
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -34,7 +36,8 @@ fun CustomTextBoxView(
                 color = SecondaryLightColor,
                 style = MaterialTheme.typography.bodySmall)
         },
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done,
+            keyboardType = keyboardType),
         keyboardActions = KeyboardActions(
             onDone = { focusManager.clearFocus() }),
         colors = OutlinedTextFieldDefaults.colors(

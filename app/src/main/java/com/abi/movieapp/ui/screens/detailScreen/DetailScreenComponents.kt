@@ -209,7 +209,8 @@ fun ReviewSingleView(comment : Comment?, modifier : Modifier) {
 
 @Composable
 fun MovieBookingSingleRowWithTheatreName(
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    number : Int
 ) {
 
     Column(modifier = Modifier
@@ -237,7 +238,7 @@ fun MovieBookingSingleRowWithTheatreName(
                 color = TextFieldBorderColor
             )
 
-            Text(text = "Eurasia",
+            Text(text = "Theatre $number",
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(weight = 0.7F),

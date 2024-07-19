@@ -59,4 +59,5 @@
     <string name="continue_with_amount">Continue ₹ %s</string>
     <string name="continue_with_phone">Continue with phone number</string>
     <string name="done">Done</string>
+    <string name="enter_correct_phone_number">Enter correct phone number</string>
 </resources>

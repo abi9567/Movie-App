@@ -1,5 +1,6 @@
 package com.abi.movieapp.ui.screens.detailScreen
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,7 @@ import com.abi.movieapp.ui.theme.SecondaryLightColor
 import com.abi.movieapp.ui.theme.SwitchBackgroundColor
 import com.abi.movieapp.ui.theme.TextFieldBorderColor
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SessionsView(
     viewModel : DetailViewModel,
@@ -114,10 +116,19 @@ fun SessionsView(
         LazyColumn(modifier = Modifier.fillMaxWidth(),
             contentPadding = PaddingValues(vertical = dimensionResource(id = R.dimen.margin16))
         ) {
+            stickyHeader {
+                Text(text = "Theatre",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(weight = 0.7F),
+                    style = MaterialTheme.typography.titleSmall)
+            }
+
             items(count = 10) { position ->
                 MovieBookingSingleRowWithTheatreName(
-                    onClick = onClick
-                )
+                    number = position + 1,
+                    onClick = onClick)
+
                 if (position != 9) {
                     HorizontalDivider(modifier = Modifier.fillMaxWidth(),
                         color = TextFieldBorderColor)
