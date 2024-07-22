@@ -123,14 +123,14 @@ fun OccupiedSeatView() {
         Box(modifier = Modifier
             .clip(shape = CircleShape)
             .background(color = MidnightBlue)
-            .size(size = 16.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(painter = painterResource(id = R.drawable.ic_close),
-                modifier = Modifier.size(size = 5.dp),
-                tint = Color.Unspecified,
-                contentDescription = null)
-        }
+            .size(size = 16.dp)
+        )
+//        {
+//            Icon(painter = painterResource(id = R.drawable.ic_close),
+//                modifier = Modifier.size(size = 5.dp),
+//                tint = Color.Unspecified,
+//                contentDescription = null)
+//        }
 
         CustomWidthSpacer(dimenResId = R.dimen.margin8)
 
@@ -225,12 +225,12 @@ fun SingleSeatView(color : Color = SwitchBackgroundColor,
                 style = MaterialTheme.typography.labelMedium)
             return
         }
-        if (seat?.available == false) {
-            Icon(painter = painterResource(id = R.drawable.ic_close),
-                modifier = Modifier.size(size = 9.dp),
-                tint = Color.Unspecified,
-                contentDescription = null)
-        }
+//        if (seat?.available == false) {
+//            Icon(painter = painterResource(id = R.drawable.ic_close),
+//                modifier = Modifier.size(size = 9.dp),
+//                tint = Color.Unspecified,
+//                contentDescription = null)
+//        }
     }
 }
 
