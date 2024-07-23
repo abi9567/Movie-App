@@ -47,7 +47,8 @@ class PayTicketViewModel @Inject constructor(@ApplicationContext private val con
 
     fun setPhoneNumberEntered() {
         _isPhoneNumberEntered.value = !(_isPhoneNumberEntered.value)
-        setPaymentScreenEnum(enum = PaymentScreen.SelectPaymentMethodView)
+//        setPaymentScreenEnum(enum = PaymentScreen.SelectPaymentMethodView)
+        setPaymentScreenEnum(enum = PaymentScreen.PaymentSuccess)
     }
 
     fun setPaymentMethodSelected(position : Int) {
@@ -56,7 +57,6 @@ class PayTicketViewModel @Inject constructor(@ApplicationContext private val con
 
     private fun getUPIAppsList() {
         val list = Utils.getInstalledUPIApps(context = context)
-        Log.d("PayTicketViewModel", list.toString())
         setUPIAppList(list = list)
     }
 

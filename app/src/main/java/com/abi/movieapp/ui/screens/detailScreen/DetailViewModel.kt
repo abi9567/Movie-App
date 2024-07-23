@@ -8,15 +8,19 @@ import com.abi.movieapp.data.response.Comment
 import com.abi.movieapp.data.response.CommonPagingResponse
 import com.abi.movieapp.data.response.MovieDetail
 import com.abi.movieapp.data.response.Movie
+import com.abi.movieapp.data.response.MovieShowTime
 import com.abi.movieapp.data.response.Resource
+import com.abi.movieapp.data.response.Theatre
 import com.abi.movieapp.data.response.Video
 import com.abi.movieapp.internal.enums.DetailScreenTabs
 import com.abi.movieapp.navigation.Screen
 import com.abi.movieapp.repository.Repository
+import com.abi.movieapp.utils.other.Utils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,7 +28,7 @@ class DetailViewModel @Inject constructor(private val repository : Repository,
     savedStateHandle : SavedStateHandle
     ) : ViewModel() {
 
-    private val _selectedTab = MutableStateFlow(value = DetailScreenTabs.About)
+    private val _selectedTab = MutableStateFlow(value = DetailScreenTabs.Booking)
     val selectedTab : Flow<DetailScreenTabs> = _selectedTab
 
     private val _movieDetail = MutableStateFlow<Resource<MovieDetail>?>(null)
@@ -45,15 +49,40 @@ class DetailViewModel @Inject constructor(private val repository : Repository,
     private val movieId = savedStateHandle.get<String?>(Screen.MOVIE_ID)
 //    private val movieId = "1022789"
 
-    private val _isChecked = MutableStateFlow(value = false)
-    val isChecked : Flow<Boolean> = _isChecked
+    private val _isSortedByDistance = MutableStateFlow(value = false)
+    val isSortedByDistance : Flow<Boolean> = _isSortedByDistance
 
     val tabList = listOf(DetailScreenTabs.About, DetailScreenTabs.Booking)
 
-    fun setTab(tab : DetailScreenTabs) {
-        if (_selectedTab.value == tab) return
-        _selectedTab.value = tab
-    }
+    private val initialMovieList = MovieShowTime.showTimeList
+
+    private val _movieShowTime = MutableStateFlow(value = initialMovieList)
+    val movieShowTime : Flow<List<Theatre>> = _movieShowTime
+
+    private val calendar = Calendar.getInstance()
+    private val time = calendar.time.time
+    private val calculationValue : Long = 86400000
+    private val nextDaysListInMilliSecond = listOf(
+        (time + 0 * calculationValue),
+        (time + 1 * calculationValue),
+        (time + 2 * calculationValue),
+        (time + 3 * calculationValue),
+        (time + 4 * calculationValue),
+        (time + 5 * calculationValue),
+        (time + 6 * calculationValue),
+        (time + 7 * calculationValue),
+        (time + 8 * calculationValue),
+        (time + 9 * calculationValue),
+    )
+
+    val nextDaysList = nextDaysListInMilliSecond.map { Utils.convertToDate(time = it) }
+
+    private val _selectedDate = MutableStateFlow(nextDaysList.get(index = 0))
+    val selectedDate : Flow<Pair<String, String>> = _selectedDate
+
+    private val _isDateVisible = MutableStateFlow(value = false)
+    val isDateVisible : Flow<Boolean> = _isDateVisible
+
 
     init {
         fetchMovieDetail()
@@ -61,6 +90,19 @@ class DetailViewModel @Inject constructor(private val repository : Repository,
         getCredits()
         getComments()
         getYoutubeUrl()
+    }
+
+    fun setTab(tab : DetailScreenTabs) {
+        if (_selectedTab.value == tab) return
+        _selectedTab.value = tab
+    }
+
+    fun setDate(date : Pair<String, String>) {
+        _selectedDate.value = date
+    }
+
+    fun setDateVisibility() {
+        _isDateVisible.value = !(_isDateVisible.value)
     }
 
     private fun fetchMovieDetail() {
@@ -103,7 +145,16 @@ class DetailViewModel @Inject constructor(private val repository : Repository,
         }
     }
 
-    fun setSwitchBoxValue() {
-        _isChecked.value = !_isChecked.value
+    private fun sortByDistance() {
+        _movieShowTime.value = _movieShowTime.value.sortedBy { it.distance }
+    }
+
+    private fun unSortShowTime() {
+        _movieShowTime.value = initialMovieList
+    }
+
+    fun setSortedList() {
+        _isSortedByDistance.value = !(_isSortedByDistance.value)
+        if (_isSortedByDistance.value) sortByDistance() else unSortShowTime()
     }
 }

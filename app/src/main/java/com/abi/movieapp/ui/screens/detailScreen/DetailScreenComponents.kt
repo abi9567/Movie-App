@@ -1,5 +1,6 @@
 package com.abi.movieapp.ui.screens.detailScreen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -43,6 +44,7 @@ import com.abi.movieapp.data.response.Person
 import com.abi.movieapp.internal.extensions.formatMovieRating
 import com.abi.movieapp.ui.common.CustomHeightSpacer
 import com.abi.movieapp.ui.common.CustomWidthSpacer
+import com.abi.movieapp.ui.theme.MidnightBlue
 import com.abi.movieapp.ui.theme.PrimaryColor
 import com.abi.movieapp.ui.theme.SecondaryLightColor
 import com.abi.movieapp.ui.theme.TextFieldBorderColor
@@ -210,41 +212,16 @@ fun ReviewSingleView(comment : Comment?, modifier : Modifier) {
 @Composable
 fun MovieBookingSingleRowWithTheatreName(
     onClick: () -> Unit,
-    number : Int
+    showTime : String?
 ) {
-
-    Column(modifier = Modifier
-        .height(intrinsicSize = IntrinsicSize.Max)
-        .clickable { onClick() }
-        .padding(vertical = dimensionResource(id = R.dimen.margin16))
-        .fillMaxWidth(),
-        verticalArrangement = Arrangement.Center
-    ) {
-
-        Row(modifier = Modifier
-            .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "14 : 50",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = dimensionResource(id = R.dimen.margin16))
-                    .weight(weight = 0.3F),
-                style = MaterialTheme.typography.headlineMedium)
-
-            VerticalDivider(modifier = Modifier
-                .padding(horizontal = dimensionResource(id = R.dimen.margin16))
-                .fillMaxHeight(),
-                color = TextFieldBorderColor
-            )
-
-            Text(text = "Theatre $number",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(weight = 0.7F),
-                style = MaterialTheme.typography.titleSmall)
-        }
-
-        CustomHeightSpacer(dimenResId = R.dimen.margin16)
-    }
+    Text(text = showTime ?: "",
+        modifier = Modifier
+            .clip(shape = MaterialTheme.shapes.small)
+            .clickable { onClick() }
+            .background(color = MidnightBlue)
+//            .border(width = 1.dp, color = YellowColor, shape = MaterialTheme.shapes.small)
+            .padding(horizontal = dimensionResource(id = R.dimen.margin16),
+                vertical = dimensionResource(id = R.dimen.margin8)
+            ),
+        style = MaterialTheme.typography.titleSmall)
 }

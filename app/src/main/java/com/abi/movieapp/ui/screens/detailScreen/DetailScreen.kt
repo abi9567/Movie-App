@@ -44,6 +44,7 @@ fun DetailScreen(
     val comments by viewModel.reviews.collectAsState(initial = null)
     val cast by viewModel.credits.collectAsState(initial = null)
     val youtubeUrls by viewModel.youtubeUrls.collectAsState(initial = null)
+    val selectedDate by viewModel.selectedDate.collectAsState(initial = null)
 
     BackHandler(enabled = selectedTab == DetailScreenTabs.Booking) {
         viewModel.setTab(tab = DetailScreenTabs.About)
@@ -109,7 +110,8 @@ fun DetailScreen(
                             )
                         }
 
-                        else -> { SessionsView(viewModel = viewModel,
+                        else -> { BookingView(viewModel = viewModel,
+                            selectedDate = selectedDate,
                             onClick = {
                                 navController.navigate(route = Screen.SeatSelectionScreen.route)
                             }

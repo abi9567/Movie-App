@@ -32,6 +32,7 @@ import androidx.navigation.NavController
 import com.abi.movieapp.R
 import com.abi.movieapp.internal.enums.PaymentScreen
 import com.abi.movieapp.internal.extensions.showToast
+import com.abi.movieapp.navigation.Screen
 import com.abi.movieapp.ui.common.CustomGradientButton
 import com.abi.movieapp.ui.common.CustomHeightSpacer
 import com.abi.movieapp.ui.common.CustomLoading
@@ -63,7 +64,9 @@ fun PayTicketScreen(
                         viewModel.setPaymentScreenEnum(enum = PaymentScreen.SelectPaymentMethodView)
                     }
                     PaymentScreen.PaymentSuccess -> {
-                        navController.navigateUp()
+                        navController.navigate(route = Screen.HomeScreen.route) {
+                            popUpTo(route = Screen.HomeScreen.route)
+                        }
                     }
                 }
 
@@ -74,10 +77,10 @@ fun PayTicketScreen(
         val paymentMethodSelected by viewModel.paymentMethodSelected.collectAsState(initial = 0)
         val upiList by viewModel.upiAppsList.collectAsState(initial = null)
 
-        val animateRotation by animateFloatAsState(
-            animationSpec = tween(durationMillis = 900, easing = LinearEasing),
-            targetValue = if (paymentScreenEnum == PaymentScreen.PaymentSuccess) -180F else 0F,
-            label = "Animate")
+//        val animateRotation by animateFloatAsState(
+//            animationSpec = tween(durationMillis = 900, easing = LinearEasing),
+//            targetValue = if (paymentScreenEnum == PaymentScreen.PaymentSuccess) -180F else 0F,
+//            label = "Animate")
 
         val startActivityLauncher = rememberLauncherForActivityResult(contract =
             ActivityResultContracts.StartActivityForResult()
@@ -136,7 +139,7 @@ fun PayTicketScreen(
                     viewModel.setPaymentScreenEnum(enum = PaymentScreen.SelectPaymentMethodView)
                 }
                 PaymentScreen.PaymentSuccess -> {
-                    navController.navigateUp()
+                    viewModel.setPaymentScreenEnum(enum = PaymentScreen.MobileNumberView)
                 }
             }
         }
@@ -146,9 +149,6 @@ fun PayTicketScreen(
             .fillMaxWidth()) {
 
             Column(modifier = Modifier
-                .graphicsLayer {
-                    rotationY = animateRotation
-                }
                 .padding(all = dimensionResource(id = R.dimen.margin8))
                 .background(color = MidnightBlue, shape = MaterialTheme.shapes.medium)
                 .padding(vertical = dimensionResource(id = R.dimen.margin16))
@@ -238,10 +238,10 @@ fun PayTicketScreen(
                     PaymentScreen.PaymentSuccess -> stringResource(id = R.string.done)
                 },
                     modifier = Modifier
-                        .graphicsLayer {
-                            rotationY =
-                                if (paymentScreenEnum == PaymentScreen.PaymentSuccess) -180F else 0F
-                        }
+//                        .graphicsLayer {
+//                            rotationY =
+//                                if (paymentScreenEnum == PaymentScreen.PaymentSuccess) -180F else 0F
+//                        }
                         .padding(horizontal = dimensionResource(id = R.dimen.margin16))
                         .fillMaxWidth(),
                     verticalPadding = 14.dp,

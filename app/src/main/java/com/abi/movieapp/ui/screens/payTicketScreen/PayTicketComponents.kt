@@ -54,7 +54,6 @@ fun TicketDetailView(isPaymentSuccess : Boolean) {
 
     Column(modifier = Modifier
         .fillMaxWidth()
-        .graphicsLayer { rotationY = if (isPaymentSuccess) -180F else 0F }
         .padding(horizontal = dimensionResource(id = R.dimen.margin16)))
     {
         Text(text = "The Batman",
@@ -255,7 +254,7 @@ fun SingleUPIListView(item : InstalledUPIApps?,
 @Composable
 fun PaymentSuccessView() {
     Column(modifier = Modifier
-        .graphicsLayer { rotationY = -180F }
+//        .graphicsLayer { rotationY = -180F }
         .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

@@ -27,8 +27,9 @@
     <string name="no_movies">No Movies…</string>
     <string name="search_with_another_movie">Search with another movie name</string>
     <string name="time">Time</string>
-    <string name="by_cinema">By cinema</string>
+    <string name="distance">Distance</string>
     <string name="theatre_name">Theatre Name</string>
+    <string name="theatre_and_show_time">Select theatre and show time</string>
     <string name="available">Available</string>
     <string name="occupied">Occupied</string>
     <string name="chosen">Chosen</string>
