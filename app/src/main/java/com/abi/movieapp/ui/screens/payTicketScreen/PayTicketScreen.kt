@@ -245,7 +245,11 @@ fun PayTicketScreen(
                             .fillMaxWidth()
                             .padding(horizontal = dimensionResource(id = R.dimen.margin16)),
                         verticalPadding = 14.dp,
-                        onClick = { navController.navigateUp() })
+                        onClick = {
+                            navController.navigate(route = Screen.HomeScreen.route) {
+                                popUpTo(route = Screen.HomeScreen.route)
+                            }
+                        })
                 }
             }
 
