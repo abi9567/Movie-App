@@ -155,7 +155,9 @@ fun PayTicketScreen(
                     viewModel.setPaymentScreenEnum(enum = PaymentScreen.SelectPaymentMethodView)
                 }
                 PaymentScreen.PaymentSuccess -> {
-                    viewModel.setPaymentScreenEnum(enum = PaymentScreen.MobileNumberView)
+                    navController.navigate(route = Screen.HomeScreen.route) {
+                        popUpTo(route = Screen.HomeScreen.route)
+                    }
                 }
                 else -> {}
             }
