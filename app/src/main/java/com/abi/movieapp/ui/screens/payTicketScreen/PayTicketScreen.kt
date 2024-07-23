@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.abi.movieapp.R
 import com.abi.movieapp.internal.enums.PaymentScreen
+import com.abi.movieapp.internal.extensions.navigateWithPopUpToInclusive
 import com.abi.movieapp.internal.extensions.showToast
 import com.abi.movieapp.navigation.Screen
 import com.abi.movieapp.ui.common.CustomGradientButton
@@ -79,9 +80,9 @@ fun PayTicketScreen(
                         viewModel.setPaymentScreenEnum(enum = PaymentScreen.SelectPaymentMethodView)
                     }
                     PaymentScreen.PaymentSuccess -> {
-                        navController.navigate(route = Screen.HomeScreen.route) {
-                            popUpTo(route = Screen.HomeScreen.route)
-                        }
+                        navController.navigateWithPopUpToInclusive(
+                            route = Screen.HomeScreen.route
+                        )
                     }
                     else -> {}
                 }
@@ -155,9 +156,9 @@ fun PayTicketScreen(
                     viewModel.setPaymentScreenEnum(enum = PaymentScreen.SelectPaymentMethodView)
                 }
                 PaymentScreen.PaymentSuccess -> {
-                    navController.navigate(route = Screen.HomeScreen.route) {
-                        popUpTo(route = Screen.HomeScreen.route)
-                    }
+                    navController.navigateWithPopUpToInclusive(
+                        route = Screen.HomeScreen.route
+                    )
                 }
                 else -> {}
             }
@@ -246,9 +247,9 @@ fun PayTicketScreen(
                             .padding(horizontal = dimensionResource(id = R.dimen.margin16)),
                         verticalPadding = 14.dp,
                         onClick = {
-                            navController.navigate(route = Screen.HomeScreen.route) {
-                                popUpTo(route = Screen.HomeScreen.route)
-                            }
+                            navController.navigateWithPopUpToInclusive(
+                                route = Screen.HomeScreen.route
+                            )
                         })
                 }
             }
