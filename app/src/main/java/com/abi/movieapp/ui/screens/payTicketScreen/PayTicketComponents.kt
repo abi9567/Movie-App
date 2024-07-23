@@ -1,7 +1,11 @@
 package com.abi.movieapp.ui.screens.payTicketScreen
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -79,7 +84,8 @@ fun TicketDetailView(isPaymentSuccess : Boolean) {
         HorizontalDivider(color = TextFieldBorderColor,
             modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.margin16)))
 
-        AnimatedVisibility(visible = !isPaymentSuccess) {
+        AnimatedVisibility(visible = !isPaymentSuccess,
+            exit = shrinkVertically (animationSpec = tween(delayMillis = 440, easing = LinearEasing)) { -it }) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 DetailScreenTitleDescriptionView(title = stringResource(id = R.string.ticket_price),
                     description = stringResource(id = R.string.amount, 120)
@@ -105,16 +111,18 @@ fun TicketDetailView(isPaymentSuccess : Boolean) {
 }
 
 @Composable
-fun TicketDotView() {
-    Row(modifier = Modifier
-        .width(width = 1000.dp)
-        .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
+fun TicketDotView(modifier : Modifier = Modifier) {
+    Row(modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.Bottom,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Icon(painter = painterResource(id = R.drawable.ic_semi_circle_left),
+        Icon(painter = painterResource(id = R.drawable.ic_half_mid_circle),
             tint = Color.Unspecified,
             contentDescription = null)
+
+//        Icon(painter = painterResource(id = R.drawable.ic_semi_circle_left),
+//            tint = Color.Unspecified,
+//            contentDescription = null)
 
         Row(modifier = Modifier
             .fillMaxWidth()
@@ -123,13 +131,21 @@ fun TicketDotView() {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             repeat(times = 13) {
-                SingleDotView()
+//                SingleDotView()
+                Icon(painter = painterResource(id = R.drawable.ic_top_half_circle),
+                    tint = Color.Unspecified,
+                    contentDescription = null)
             }
         }
 
-        Icon(painter = painterResource(id = R.drawable.ic_semi_circle_right),
+        Icon(painter = painterResource(id = R.drawable.ic_half_mid_circle),
+            modifier = Modifier.rotate(degrees = -90F),
             tint = Color.Unspecified,
             contentDescription = null)
+
+//        Icon(painter = painterResource(id = R.drawable.ic_semi_circle_right),
+//            tint = Color.Unspecified,
+//            contentDescription = null)
     }
 }
 

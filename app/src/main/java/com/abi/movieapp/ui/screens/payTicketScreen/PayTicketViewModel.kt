@@ -34,7 +34,7 @@ class PayTicketViewModel @Inject constructor(@ApplicationContext private val con
     val paymentScreenEnum : Flow<PaymentScreen> = _paymentScreenEnum
 
     init {
-        getUPIAppsList()
+//        getUPIAppsList()
     }
 
     fun setLoading() {
@@ -48,7 +48,11 @@ class PayTicketViewModel @Inject constructor(@ApplicationContext private val con
     fun setPhoneNumberEntered() {
         _isPhoneNumberEntered.value = !(_isPhoneNumberEntered.value)
 //        setPaymentScreenEnum(enum = PaymentScreen.SelectPaymentMethodView)
-        setPaymentScreenEnum(enum = PaymentScreen.PaymentSuccess)
+        setPaymentScreenEnum(enum = PaymentScreen.EmptyAnimationView)
+        viewModelScope.launch {
+            delay(timeMillis = 450)
+            setPaymentScreenEnum(enum = PaymentScreen.PaymentSuccess)
+        }
     }
 
     fun setPaymentMethodSelected(position : Int) {

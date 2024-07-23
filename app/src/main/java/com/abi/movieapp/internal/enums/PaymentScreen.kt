@@ -4,5 +4,6 @@ enum class PaymentScreen {
     MobileNumberView,
     SelectPaymentMethodView,
     ShowUPIListView,
-    PaymentSuccess
+    PaymentSuccess,
+    EmptyAnimationView
 }
