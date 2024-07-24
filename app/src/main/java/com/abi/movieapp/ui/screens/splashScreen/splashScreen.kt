@@ -15,6 +15,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.abi.movieapp.R
+import com.abi.movieapp.internal.extensions.navigateWithPopUpToInclusive
 import com.abi.movieapp.navigation.Screen
 import kotlinx.coroutines.delay
 
@@ -27,7 +28,10 @@ fun SplashScreen(navController : NavController,
 
     LaunchedEffect(key1 = Unit) {
         delay(timeMillis = 2000)
-        navController.navigate(route = Screen.HomeScreen.route)
+        navController.navigateWithPopUpToInclusive(
+            route = Screen.HomeScreen.route,
+            inclusiveRoute = Screen.SplashScreen.route
+        )
     }
 
     Box(modifier = Modifier.fillMaxSize(),
