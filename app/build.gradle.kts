@@ -128,4 +128,7 @@ dependencies {
 
     //In App Updates
     implementation(libs.app.update.ktx)
+
+    //Data Store
+    implementation(libs.androidx.datastore.preferences)
 }

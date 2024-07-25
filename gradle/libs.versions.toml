@@ -4,6 +4,7 @@ appUpdateKtx = "2.1.0"
 coilCompose = "2.6.0"
 converterGson = "2.11.0"
 coreSplashscreen = "1.0.1"
+datastorePreferences = "1.1.1"
 hiltCompiler = "2.51.1"
 hiltLifecycleViewmodel = "1.2.0"
 kotlin = "1.9.0"
@@ -25,6 +26,7 @@ runtimeLivedata = "1.6.8"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltLifecycleViewmodel" }
 androidx-hilt-lifecycle-viewmodel = { module = "androidx.hilt:hilt-lifecycle-viewmodel", version.ref = "hiltLifecycleViewmodel" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltLifecycleViewmodel" }
