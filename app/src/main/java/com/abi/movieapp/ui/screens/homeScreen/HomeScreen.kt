@@ -1,5 +1,6 @@
 package com.abi.movieapp.ui.screens.homeScreen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -19,8 +20,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -52,14 +51,22 @@ fun HomeScreen(
     val movieList = viewModel.filmList.collectAsLazyPagingItems()
     val state = rememberLazyGridState()
     val scope = rememberCoroutineScope()
-    val modalBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val modalBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden,
+        confirmValueChange = { false })
     val languages = viewModel.languageList
     val currentLanguage = viewModel.currentLanguage.observeAsState().value ?: Language.Malayalam.name
 
+    BackHandler(enabled = modalBottomSheetState.isVisible) {
+        scope.launch { modalBottomSheetState.hide() }
+    }
+
     CustomModalBottomSheetLayout(
         sheetState = modalBottomSheetState,
+        isSheetGesturesEnabled = false,
         sheetContent = {
             LanguageSelectionBottomSheet(languages = languages,
+                selectedItem = currentLanguage,
+                onClose = { scope.launch { modalBottomSheetState.hide() } },
                 onClick = { selectedLanguage ->
                     viewModel.changeLanguage(language = selectedLanguage)
                     scope.launch { modalBottomSheetState.hide() }

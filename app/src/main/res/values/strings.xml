@@ -25,6 +25,7 @@
     <string name="search_movie">Search Movie</string>
     <string name="book_ticket">Book Ticket</string>
     <string name="no_movies">No Movies…</string>
+    <string name="select_language">Select Language</string>
     <string name="search_with_another_movie">Search with another movie name</string>
     <string name="time">Time</string>
     <string name="distance">Distance</string>

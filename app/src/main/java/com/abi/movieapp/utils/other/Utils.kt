@@ -9,6 +9,7 @@ import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.ActivityResult
 import com.abi.movieapp.data.response.InstalledUPIApps
+import com.abi.movieapp.internal.enums.Language
 import com.abi.movieapp.internal.extensions.showToast
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -82,4 +83,24 @@ object Utils {
         return Pair(month, date)
     }
 
+    fun selectedDateStringValue(language : String) : String {
+        return when(language) {
+            Language.English.name -> "en"
+            Language.Malayalam.name -> "ml"
+            Language.Hindi.name -> "hi"
+            Language.Spanish.name -> "es"
+            Language.French.name -> "fr"
+            Language.German.name -> "de"
+            Language.Japanese.name -> "ja"
+            Language.Korean.name -> "ko"
+            Language.Chinese.name -> "zh"
+            Language.Russian.name -> "ru"
+            Language.Italian.name -> "it"
+            Language.Portuguese.name -> "pt"
+            Language.Arabic.name -> "ar"
+            Language.Tamil.name -> "ta"
+            Language.Telugu.name -> "te"
+            else -> "en"
+        }
+    }
 }

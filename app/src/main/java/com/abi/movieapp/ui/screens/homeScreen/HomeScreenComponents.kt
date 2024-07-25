@@ -11,14 +11,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -34,7 +35,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -50,8 +53,10 @@ import com.abi.movieapp.ui.common.CircularLoadingView
 import com.abi.movieapp.ui.common.CustomHeightSpacer
 import com.abi.movieapp.ui.common.CustomLottieView
 import com.abi.movieapp.ui.common.CustomPagerComposeView
+import com.abi.movieapp.ui.common.CustomRadioButton
 import com.abi.movieapp.ui.common.CustomWidthSpacer
 import com.abi.movieapp.ui.common.PaginationErrorView
+import com.abi.movieapp.ui.theme.BackgroundBrush
 import com.abi.movieapp.ui.theme.MidnightBlue
 import com.abi.movieapp.ui.theme.PrimaryGradientColor
 import com.abi.movieapp.ui.theme.SecondaryLightColor
@@ -224,25 +229,60 @@ fun HomeScreenFilmPaginationView(
 
 @Composable
 fun LanguageSelectionBottomSheet(languages : List<Language>,
-                                 onClick: (Language) -> Unit) {
-
-    val scrollState = rememberScrollState()
+                                 selectedItem : String,
+                                 onClick: (Language) -> Unit,
+                                 onClose: () -> Unit
+) {
     Column(modifier = Modifier
+        .padding(top = dimensionResource(id = R.dimen.margin16))
+        .height(height = 300.dp)
         .navigationBarsPadding()
-        .verticalScroll(state = scrollState)
-        .padding(vertical = dimensionResource(id = R.dimen.margin16))
-        .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(space = dimensionResource(id = R.dimen.margin16))
-    ) {
-        repeat(times = languages.size) { position ->
-            val item = languages[position]
-            Text(text = item.name,
-                style = MaterialTheme.typography.titleLarge,
+        .fillMaxWidth()) {
+
+        Row(modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = stringResource(id = R.string.select_language),
                 modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(weight = 1F),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.titleSmall)
+
+            IconButton(onClick = onClose) {
+                Icon(painter = painterResource(id = R.drawable.ic_close),
+                    tint = Color.Unspecified,
+                    contentDescription = null)
+            }
+        }
+
+        LazyColumn(modifier = Modifier.fillMaxWidth(),
+            contentPadding = PaddingValues(bottom = dimensionResource(id = R.dimen.margin16)),
+            verticalArrangement = Arrangement.spacedBy(space = dimensionResource(id = R.dimen.margin16))
+        ) {
+            items(items = languages) { item ->
+                Row(modifier = Modifier
                     .clickable { onClick(item) }
-                    .padding(vertical = dimensionResource(id = R.dimen.margin8),
-                        horizontal = dimensionResource(id = R.dimen.margin16))
-                    .fillMaxWidth())
+                    .padding(
+                        vertical = dimensionResource(id = R.dimen.margin8),
+                        horizontal = dimensionResource(id = R.dimen.margin16)
+                    )
+                    .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    CustomRadioButton(isSelected = selectedItem == item.name,
+                        unSelectedBrush = BackgroundBrush,
+                        size = 20.dp)
+
+                    CustomWidthSpacer(dimenResId = R.dimen.margin16)
+
+                    Text(text = item.name,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(weight = 1F),
+                        style = MaterialTheme.typography.titleLarge)
+                }
+            }
         }
     }
 }

@@ -27,14 +27,9 @@ class HomeViewModel @Inject constructor(repository: Repository,
 
     val filmList = currentLanguage.switchMap { lang ->
         repository.getNowPlayingMovies(releaseDate = todayDateFormated,
-            language = when(lang) {
-                Language.Malayalam.name -> "ml"
-                Language.Hindi.name -> "hi"
-                Language.English.name -> "en"
-                else -> "en-US"
-            }
-        ).cachedIn(viewModelScope).asLiveData()
-    }.asFlow()
+            language = Utils.selectedDateStringValue(language = lang)
+        ).asLiveData()
+    }.asFlow().cachedIn(scope = viewModelScope)
 
     fun changeLanguage(language: Language) {
         viewModelScope.launch {
