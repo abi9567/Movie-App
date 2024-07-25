@@ -16,7 +16,7 @@ interface APIInterface {
     @GET("discover/movie")
     suspend fun nowPlayingMovieList(
         @Query("page") page: Int,
-        @Query("with_original_language") language : String = "ml",
+        @Query("with_original_language") language : String? = "ml",
         @Query("region") region : String = "IN",
         @Query("release_date.lte") releaseDate : String?,
         @Query("sort_by") sortBy : String = "primary_release_date.desc"

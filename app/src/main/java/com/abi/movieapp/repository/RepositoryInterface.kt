@@ -12,7 +12,7 @@ import com.abi.movieapp.data.response.Video
 import kotlinx.coroutines.flow.Flow
 
 interface RepositoryInterface {
-    fun getNowPlayingMovies(releaseDate : String?) : Flow<PagingData<Movie>>
+    fun getNowPlayingMovies(releaseDate : String?, language : String?) : Flow<PagingData<Movie>>
     suspend fun getMovieDetails(movieId : String?) : Flow<Resource<MovieDetail>>
     suspend fun getRecommendedMovies(movieId: String?) : Flow<Resource<CommonPagingResponse<Movie>>>
     suspend fun getMovieCasts(movieId: String?) : Flow<Resource<Cast>>

@@ -20,10 +20,12 @@ import javax.inject.Inject
 
 class Repository @Inject constructor(private val apiInterface : APIInterface) : RepositoryInterface {
 
-    override fun getNowPlayingMovies(releaseDate : String?) : Flow<PagingData<Movie>> =
+    override fun getNowPlayingMovies(releaseDate : String?, language : String?) : Flow<PagingData<Movie>> =
         Pager(
             pagingSourceFactory = {
-                HomePagingSource(apiInterface = apiInterface, releaseDate = releaseDate)
+                HomePagingSource(apiInterface = apiInterface,
+                    language = language,
+                    releaseDate = releaseDate)
             },
             config = PagingConfig(pageSize = 10)
         ).flow

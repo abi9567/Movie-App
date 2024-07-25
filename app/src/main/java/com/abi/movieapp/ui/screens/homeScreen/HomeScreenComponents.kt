@@ -11,11 +11,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -40,6 +43,7 @@ import coil.request.ImageRequest
 import com.abi.movieapp.BuildConfig
 import com.abi.movieapp.R
 import com.abi.movieapp.data.response.Movie
+import com.abi.movieapp.internal.enums.Language
 import com.abi.movieapp.internal.extensions.formatMovieRating
 import com.abi.movieapp.navigation.Screen
 import com.abi.movieapp.ui.common.CircularLoadingView
@@ -151,7 +155,6 @@ fun HomeScreenFilmPaginationView(
     movieList : LazyPagingItems<Movie>,
     navController : NavController
 ) {
-
     CustomPagerComposeView(pagingItem = movieList,
         emptyItemView = {
             Box(modifier = Modifier.fillMaxSize(),
@@ -217,4 +220,29 @@ fun HomeScreenFilmPaginationView(
             }
         }
     )
+}
+
+@Composable
+fun LanguageSelectionBottomSheet(languages : List<Language>,
+                                 onClick: (Language) -> Unit) {
+
+    val scrollState = rememberScrollState()
+    Column(modifier = Modifier
+        .navigationBarsPadding()
+        .verticalScroll(state = scrollState)
+        .padding(vertical = dimensionResource(id = R.dimen.margin16))
+        .fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(space = dimensionResource(id = R.dimen.margin16))
+    ) {
+        repeat(times = languages.size) { position ->
+            val item = languages[position]
+            Text(text = item.name,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier
+                    .clickable { onClick(item) }
+                    .padding(vertical = dimensionResource(id = R.dimen.margin8),
+                        horizontal = dimensionResource(id = R.dimen.margin16))
+                    .fillMaxWidth())
+        }
+    }
 }
