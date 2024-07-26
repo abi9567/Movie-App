@@ -3,6 +3,7 @@ package com.abi.movieapp.ui.screens.payTicketScreen
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.abi.movieapp.data.response.BookingDetail
 import com.abi.movieapp.data.response.InstalledUPIApps
 import com.abi.movieapp.internal.enums.PaymentScreen
 import com.abi.movieapp.utils.other.Utils
@@ -32,9 +33,8 @@ class PayTicketViewModel @Inject constructor(@ApplicationContext private val con
     private val _paymentScreenEnum = MutableStateFlow(value = PaymentScreen.MobileNumberView)
     val paymentScreenEnum : Flow<PaymentScreen> = _paymentScreenEnum
 
-    init {
-//        getUPIAppsList()
-    }
+    private val _bookingDetails = MutableStateFlow<BookingDetail?>(value = null)
+    val bookingDetails : Flow<BookingDetail?> = _bookingDetails
 
     fun setLoading() {
         viewModelScope.launch {
@@ -42,6 +42,14 @@ class PayTicketViewModel @Inject constructor(@ApplicationContext private val con
             delay(timeMillis = 1000)
             _isLoading.value = false
         }
+    }
+
+    fun setBookingDetails(item : BookingDetail?) {
+        var amount = 0
+        item?.selectedSeatList?.forEach {
+            amount += (it?.price ?: 0)
+        }
+        _bookingDetails.value = item?.copy(bookingAmount = amount)
     }
 
     fun setPhoneNumberEntered() {

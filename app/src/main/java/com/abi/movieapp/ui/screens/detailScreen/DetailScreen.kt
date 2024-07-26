@@ -22,8 +22,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.abi.movieapp.R
+import com.abi.movieapp.data.response.BookingDetail
 import com.abi.movieapp.data.response.Resource
 import com.abi.movieapp.internal.enums.DetailScreenTabs
+import com.abi.movieapp.internal.extensions.navigateAndSendData
 import com.abi.movieapp.navigation.Screen
 import com.abi.movieapp.ui.common.CustomLoading
 import com.abi.movieapp.ui.common.CustomScaffold
@@ -110,10 +112,15 @@ fun DetailScreen(
                             )
                         }
 
-                        else -> { BookingView(viewModel = viewModel,
+                        else -> {
+                            BookingView(viewModel = viewModel,
                             selectedDate = selectedDate,
-                            onClick = {
-                                navController.navigate(route = Screen.SeatSelectionScreen.route)
+                            onClick = { bookingDetail ->
+                                navController.navigateAndSendData(
+                                    route = Screen.SeatSelectionScreen.route,
+                                    key = Screen.BOOKING_DETAIL,
+                                    data = bookingDetail
+                                )
                             }
                         ) }
                     }

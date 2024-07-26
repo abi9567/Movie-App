@@ -3,6 +3,7 @@ package com.abi.movieapp.ui.screens.detailScreen
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.abi.movieapp.data.response.BookingDetail
 import com.abi.movieapp.data.response.Cast
 import com.abi.movieapp.data.response.Comment
 import com.abi.movieapp.data.response.CommonPagingResponse
@@ -20,7 +21,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -59,23 +59,7 @@ class DetailViewModel @Inject constructor(private val repository : Repository,
     private val _movieShowTime = MutableStateFlow(value = initialMovieList)
     val movieShowTime : Flow<List<Theatre>> = _movieShowTime
 
-    private val calendar = Calendar.getInstance()
-    private val time = calendar.time.time
-    private val calculationValue : Long = 86400000
-    private val nextDaysListInMilliSecond = listOf(
-        (time + 0 * calculationValue),
-        (time + 1 * calculationValue),
-        (time + 2 * calculationValue),
-        (time + 3 * calculationValue),
-        (time + 4 * calculationValue),
-        (time + 5 * calculationValue),
-        (time + 6 * calculationValue),
-        (time + 7 * calculationValue),
-        (time + 8 * calculationValue),
-        (time + 9 * calculationValue),
-    )
-
-    val nextDaysList = nextDaysListInMilliSecond.map { Utils.convertToDate(time = it) }
+    val nextDaysList = Utils.getNextDaysList()
 
     private val _selectedDate = MutableStateFlow(nextDaysList.get(index = 0))
     val selectedDate : Flow<Pair<String, String>> = _selectedDate
@@ -156,5 +140,15 @@ class DetailViewModel @Inject constructor(private val repository : Repository,
     fun setSortedList() {
         _isSortedByDistance.value = !(_isSortedByDistance.value)
         if (_isSortedByDistance.value) sortByDistance() else unSortShowTime()
+    }
+
+    fun getBookedDetails(time : String?, theatre : Theatre?) : BookingDetail? {
+        return BookingDetail(
+            filmName = _movieDetail.value?.data?.title,
+            selectedDate = _selectedDate.value,
+            selectedTime = time,
+            filmTheatreName = theatre?.name,
+            availableTimeSlotList = theatre?.showTime
+        )
     }
 }

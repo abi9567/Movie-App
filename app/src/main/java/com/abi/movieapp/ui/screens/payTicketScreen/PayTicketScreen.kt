@@ -41,9 +41,9 @@ fun PayTicketScreen(
     navController : NavController,
     viewModel : PayTicketViewModel
 ) {
-    val context = LocalContext.current
     val paymentScreenEnum by viewModel.paymentScreenEnum.collectAsState(initial = PaymentScreen.MobileNumberView)
     var mobileNumber by remember { mutableStateOf<String?>(value = null) }
+    val bookingDetails by viewModel.bookingDetails.collectAsState(initial = null)
 
     CustomScaffold(topBar = {
         CustomTopBar(text = stringResource(id = R.string.pay_for_tickets),
@@ -150,7 +150,8 @@ fun PayTicketScreen(
                 .padding(top = dimensionResource(id = R.dimen.margin16))
                 .fillMaxWidth()) {
 
-                TicketDetailView(isPaymentSuccess = paymentScreenEnum == PaymentScreen.PaymentSuccess)
+                TicketDetailView(isPaymentSuccess = paymentScreenEnum == PaymentScreen.PaymentSuccess,
+                    bookingDetail = bookingDetails)
                 CustomHeightSpacer(dimenResId = R.dimen.margin16)
                 TicketDotView(modifier = Modifier)
             }
@@ -206,7 +207,7 @@ fun PayTicketScreen(
                         CustomHeightSpacer(dimenResId = R.dimen.margin16)
 
                         CustomGradientButton(text = stringResource(id =
-                        R.string.continue_with_amount, 170),
+                        R.string.continue_with_amount, (bookingDetails?.bookingAmount ?: 0) + 51),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = dimensionResource(id = R.dimen.margin16)),

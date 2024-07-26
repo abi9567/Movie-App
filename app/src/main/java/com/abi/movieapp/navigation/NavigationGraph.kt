@@ -8,11 +8,14 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.abi.movieapp.data.response.BookingDetail
+import com.abi.movieapp.internal.extensions.getDataFromBackStackEntry
 import com.abi.movieapp.ui.screens.actorDetailScreen.ActorDetailScreen
 import com.abi.movieapp.ui.screens.actorDetailScreen.ActorViewModel
 import com.abi.movieapp.ui.screens.detailScreen.DetailScreen
@@ -34,7 +37,7 @@ fun NavigationGraph(navController : NavHostController) {
     Scaffold(containerColor = MaterialTheme.colorScheme.background) {
         SharedTransitionLayout {
                 NavHost(navController = navController,
-                    startDestination = Screen.SeatSelectionScreen.route) {
+                    startDestination = Screen.SplashScreen.route) {
 
                     composable(route = Screen.SplashScreen.route) {
                         SplashScreen(navController = navController,
@@ -73,12 +76,24 @@ fun NavigationGraph(navController : NavHostController) {
 
                     composable(route = Screen.SeatSelectionScreen.route) {
                         val viewModel : SeatSelectionViewModel = viewModel()
+
+                        LaunchedEffect(key1 = Unit) {
+                            val data = navController.getDataFromBackStackEntry<BookingDetail?>(key = Screen.BOOKING_DETAIL)
+                            viewModel.setBookingDetails(item = data)
+                        }
+
                         SeatSelectionScreen(navController = navController,
                             viewModel = viewModel)
                     }
 
                     composable(route = Screen.PayTicketScreen.route) {
                         val viewModel = hiltViewModel<PayTicketViewModel>()
+
+                        LaunchedEffect(key1 = Unit) {
+                            val data = navController.getDataFromBackStackEntry<BookingDetail?>(key = Screen.BOOKING_DETAIL)
+                            viewModel.setBookingDetails(item = data)
+                        }
+
                         PayTicketScreen(navController = navController, viewModel = viewModel)
                     }
                 }

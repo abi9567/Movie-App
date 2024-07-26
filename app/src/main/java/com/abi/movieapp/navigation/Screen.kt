@@ -18,6 +18,7 @@ sealed class Screen(val route : String) {
         const val MOVIE_ID = "movie_id"
         const val ACTOR_ID = "actor_id"
         const val YOUTUBE = "YouTube"
+        const val BOOKING_DETAIL = "booking_detail"
     }
 
 }

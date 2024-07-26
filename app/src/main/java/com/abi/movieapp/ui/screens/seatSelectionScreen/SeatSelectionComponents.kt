@@ -2,6 +2,7 @@ package com.abi.movieapp.ui.screens.seatSelectionScreen
 
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
@@ -197,7 +198,6 @@ fun SeatView(alphabetList :  Map<String, List<Seat?>?>,
 
 @Composable
 fun SingleSeatView(color : Color = SwitchBackgroundColor,
-                   fontColor : Color = Color.White,
                    isSeatSelected : Boolean,
                    onClick : () -> Unit,
                    seat : Seat?) {
@@ -219,9 +219,10 @@ fun SingleSeatView(color : Color = SwitchBackgroundColor,
         ),
         contentAlignment = Alignment.Center
     ) {
-        if (seat?.seatNumber != null && seat.available == true) {
-            Text(text = seat.seatNumber,
-                color = fontColor,
+//        if (seat?.seatNumber != null && seat.available == true) {
+        seat?.seatNumber?.let {
+            Text(text = it,
+                color = if (seat.available == true) Color.White else Color.White.copy(alpha = 0.25F),
                 style = MaterialTheme.typography.labelMedium)
             return
         }
@@ -344,14 +345,14 @@ fun BuyTicketView(
     )
 
     val rotation by swipeToDismiss.offset
+    val animatedColor by animateColorAsState(targetValue =
+    if (rotation > 250F) PrimaryGradientColor else MidnightBlue,
+        label = "Color Change")
 
     Box(modifier = Modifier
         .clip(shape = CircleShape)
-        .background(brush = ButtonGradientBrush)
-        .padding(
-            horizontal = dimensionResource(id = R.dimen.margin16),
-            vertical = 13.dp
-        )
+        .background(color = animatedColor)
+        .padding(horizontal = dimensionResource(id = R.dimen.margin16), vertical = 13.dp)
         .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
@@ -392,11 +393,10 @@ fun BuyTicketView(
         ) {
             Row(modifier = Modifier
                 .height(intrinsicSize = IntrinsicSize.Max)
-                .background(brush = ButtonGradientBrush, shape = CircleShape)
+                .background(color = animatedColor, shape = CircleShape)
                 .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 Box(modifier = Modifier
                     .graphicsLayer { rotationZ = rotation }
                     .clip(shape = CircleShape)
@@ -477,17 +477,19 @@ fun SingleDateView(
 @Composable
 fun SingleTimeView(isSelected : Boolean,
                    onClick : () -> Unit,
-                   time : String) {
+                   time : String?) {
 
     Box(modifier = Modifier
         .clip(shape = MaterialTheme.shapes.medium)
         .clickable { onClick() }
         .background(color = if (isSelected) PrimaryGradientColor else SwitchBackgroundColor)
-        .padding(horizontal = dimensionResource(id = R.dimen.margin8),
-            vertical = dimensionResource(id = R.dimen.margin4)),
+        .padding(
+            horizontal = dimensionResource(id = R.dimen.margin8),
+            vertical = dimensionResource(id = R.dimen.margin4)
+        ),
         contentAlignment = Alignment.Center) {
 
-        Text(text = time,
+        Text(text = time ?: "",
             style = MaterialTheme.typography.bodyMedium,
             color = Color.White)
     }

@@ -2,6 +2,7 @@ package com.abi.movieapp.ui.screens.seatSelectionScreen
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.abi.movieapp.data.response.BookingDetail
 import com.abi.movieapp.data.response.Seat
 import com.abi.movieapp.data.response.TheatreHall
 import com.abi.movieapp.internal.enums.DateSelectionEnum
@@ -28,33 +29,33 @@ class SeatSelectionViewModel : ViewModel() {
     private val _currentPickerSelection = MutableStateFlow(value = DateSelectionEnum.NotVisible)
     val currentPickerSelection : Flow<DateSelectionEnum> = _currentPickerSelection
 
-    private val calendar = Calendar.getInstance()
-    private val time = calendar.time.time
-    private val calculationValue : Long = 86400000
-    private val nextDaysListInMilliSecond = listOf(
-        (time + 0 * calculationValue),
-        (time + 1 * calculationValue),
-        (time + 2 * calculationValue),
-        (time + 3 * calculationValue),
-        (time + 4 * calculationValue),
-        (time + 5 * calculationValue),
-        (time + 6 * calculationValue),
-        (time + 7 * calculationValue),
-        (time + 8 * calculationValue),
-        (time + 9 * calculationValue),
-    )
+    val nextDaysList = Utils.getNextDaysList()
 
-    val nextDaysList = nextDaysListInMilliSecond.map { Utils.convertToDate(time = it) }
-    val timeList = listOf("10 AM", "1 PM", "4 PM", "6 PM", "8 PM", "11 PM")
+    private val _timeList = MutableStateFlow<List<String?>?>(value = null)
+    val timeList : Flow<List<String?>?> = _timeList
 
-    private val _selectedDate = MutableStateFlow(nextDaysList.get(index = 0))
-    val selectedDate : Flow<Pair<String, String>> = _selectedDate
+    private val _selectedDate = MutableStateFlow<Pair<String, String>?>(value = null)
+    val selectedDate : Flow<Pair<String, String>?> = _selectedDate
 
-    private val _selectedTime = MutableStateFlow(timeList.get(index = 0))
-    val selectedTime : Flow<String> = _selectedTime
+    private val _selectedTime = MutableStateFlow<String?>(value = null)
+    val selectedTime : Flow<String?> = _selectedTime
+
+    private val _bookingDetails = MutableStateFlow<BookingDetail?>(value = null)
+    val bookingDetails : Flow<BookingDetail?> = _bookingDetails
 
     init {
         setTotalSeatsToBeBooked(count = 2)
+    }
+
+    fun setBookingDetails(item : BookingDetail?) {
+        _bookingDetails.value = item
+        setDate(date = item?.selectedDate)
+        setTime(time = item?.selectedTime)
+        setTimeList(timeList = item?.availableTimeSlotList)
+    }
+
+    private fun setTimeList(timeList : List<String?>?) {
+        _timeList.value = timeList
     }
 
     fun addOrRemoveSeat(item : Seat?) {
@@ -73,12 +74,12 @@ class SeatSelectionViewModel : ViewModel() {
         _totalAmount.value = null
     }
 
-    fun setDate(date : Pair<String, String>) {
+    fun setDate(date : Pair<String, String>?) {
         _selectedDate.value = date
         setPicker(item = DateSelectionEnum.NotVisible)
     }
 
-    fun setTime(time : String) {
+    fun setTime(time : String?) {
         _selectedTime.value = time
         setPicker(item = DateSelectionEnum.NotVisible)
     }
@@ -146,7 +147,6 @@ class SeatSelectionViewModel : ViewModel() {
 
     private fun setRemainingSeatsToBeBooked(countTobeMinus : Int) {
         _remainingSeatsToBeBooked.value -= countTobeMinus
-        Log.d("SeatViewModel", "Remaining Seat -> ${_remainingSeatsToBeBooked.value}")
     }
 
     private fun availableSeatsForBooking(

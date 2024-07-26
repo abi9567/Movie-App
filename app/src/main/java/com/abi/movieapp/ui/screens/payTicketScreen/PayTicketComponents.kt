@@ -44,7 +44,9 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.abi.movieapp.R
+import com.abi.movieapp.data.response.BookingDetail
 import com.abi.movieapp.data.response.InstalledUPIApps
+import com.abi.movieapp.data.response.MovieDetail
 import com.abi.movieapp.ui.common.CustomHeightSpacer
 import com.abi.movieapp.ui.common.CustomWidthSpacer
 import com.abi.movieapp.ui.screens.detailScreen.DetailScreenTitleDescriptionView
@@ -55,7 +57,7 @@ import com.abi.movieapp.ui.theme.SecondaryLightColor
 import com.abi.movieapp.ui.theme.TextFieldBorderColor
 
 @Composable
-fun TicketDetailView(isPaymentSuccess : Boolean) {
+fun TicketDetailView(isPaymentSuccess : Boolean, bookingDetail: BookingDetail?) {
 
     Column(modifier = Modifier
         .fillMaxWidth()
@@ -67,11 +69,13 @@ fun TicketDetailView(isPaymentSuccess : Boolean) {
         CustomHeightSpacer(dimenResId = R.dimen.margin16)
 
         DetailScreenTitleDescriptionView(title = stringResource(id = R.string.theatre),
-            description = "Eurasia Cinema7")
+            description = bookingDetail?.filmTheatreName ?: "")
 
         CustomHeightSpacer(dimenResId = R.dimen.margin8)
         DetailScreenTitleDescriptionView(title = stringResource(id = R.string.date),
-            description = "6 April 2022, 14:40")
+            description = bookingDetail?.selectedDate?.first + " " +
+            bookingDetail?.selectedDate?.second + "  " + (bookingDetail?.selectedTime ?: "")
+        )
 
         CustomHeightSpacer(dimenResId = R.dimen.margin8)
         DetailScreenTitleDescriptionView(title = stringResource(id = R.string.hall),
@@ -79,7 +83,7 @@ fun TicketDetailView(isPaymentSuccess : Boolean) {
 
         CustomHeightSpacer(dimenResId = R.dimen.margin8)
         DetailScreenTitleDescriptionView(title = stringResource(id = R.string.seats),
-            description = "7 row (7,8)")
+            description = bookingDetail?.updatedTimeString ?: "")
 
         HorizontalDivider(color = TextFieldBorderColor,
             modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.margin16)))
@@ -88,7 +92,7 @@ fun TicketDetailView(isPaymentSuccess : Boolean) {
             exit = shrinkVertically (animationSpec = tween(delayMillis = 440, easing = LinearEasing)) { -it }) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 DetailScreenTitleDescriptionView(title = stringResource(id = R.string.ticket_price),
-                    description = stringResource(id = R.string.amount, 120)
+                    description = stringResource(id = R.string.amount, bookingDetail?.bookingAmount ?: 0)
                 )
 
                 CustomHeightSpacer(dimenResId = R.dimen.margin8)
@@ -105,7 +109,8 @@ fun TicketDetailView(isPaymentSuccess : Boolean) {
 
         CustomHeightSpacer(dimenResId = R.dimen.margin8)
         DetailScreenTitleDescriptionView(title = stringResource(id = R.string.order_total),
-            description = stringResource(id = R.string.amount, 171)
+            description = stringResource(id = R.string.amount,
+                (bookingDetail?.bookingAmount ?: 0) + 51)
         )
     }
 }
@@ -269,9 +274,7 @@ fun SingleUPIListView(item : InstalledUPIApps?,
 
 @Composable
 fun PaymentSuccessView() {
-    Column(modifier = Modifier
-//        .graphicsLayer { rotationY = -180F }
-        .fillMaxWidth(),
+    Column(modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(modifier = Modifier
@@ -291,12 +294,12 @@ fun PaymentSuccessView() {
                 contentDescription = null)
         }
 
-        CustomHeightSpacer(dimenResId = R.dimen.margin8)
+        CustomHeightSpacer(dimenResId = R.dimen.margin16)
 
         Text(text = stringResource(id = R.string.show_this_to_gate_keeper),
             style = MaterialTheme.typography.bodyLarge)
 
-        CustomHeightSpacer(dimenResId = R.dimen.margin16)
+        CustomHeightSpacer(dimenResId = R.dimen.margin24)
     }
 }
 

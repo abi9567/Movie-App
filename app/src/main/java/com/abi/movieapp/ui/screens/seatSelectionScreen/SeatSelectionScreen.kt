@@ -1,6 +1,5 @@
 package com.abi.movieapp.ui.screens.seatSelectionScreen
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -48,12 +47,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.abi.movieapp.R
 import com.abi.movieapp.internal.enums.DateSelectionEnum
+import com.abi.movieapp.internal.extensions.navigateAndSendData
+import com.abi.movieapp.internal.extensions.showToast
 import com.abi.movieapp.navigation.Screen
 import com.abi.movieapp.ui.common.CustomHeightSpacer
 import com.abi.movieapp.ui.common.CustomModalBottomSheetLayout
@@ -71,6 +73,7 @@ import kotlinx.coroutines.launch
 fun SeatSelectionScreen(navController : NavController,
                         viewModel : SeatSelectionViewModel) {
 
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val theatreLayoutMap = viewModel.theatreHallSeatList.layout
     val selectedSeats by viewModel.selectedSeats.collectAsState(initial = null)
@@ -95,8 +98,9 @@ fun SeatSelectionScreen(navController : NavController,
     val nextDaysList = viewModel.nextDaysList
     val selectedDate by viewModel.selectedDate.collectAsState(initial = nextDaysList.getOrNull(index = 0))
 
-    val timeList = viewModel.timeList
-    val selectedTime by viewModel.selectedTime.collectAsState(initial = timeList.getOrNull(index = 0))
+    val timeList by viewModel.timeList.collectAsState(initial = null)
+    val selectedTime by viewModel.selectedTime.collectAsState(initial = null)
+    val bookingDetail by viewModel.bookingDetails.collectAsState(initial = null)
 
     LaunchedEffect(key1 = screenWidth) {
         horizontalScrollState.scrollTo(value = screenWidth / 4)
@@ -117,8 +121,8 @@ fun SeatSelectionScreen(navController : NavController,
 
         sheetState = bottomSheetScaffoldState) {
         CustomScaffold(topBar = {
-            CustomTopBar(text = "Eurasia Cinemas",
-                description = "The Batman",
+            CustomTopBar(text = bookingDetail?.filmTheatreName ?: "Theatre Name",
+                description = bookingDetail?.filmName,
                 onNavigationButtonClick = { navController.navigateUp() })
         }) { paddingValues ->
 
@@ -190,7 +194,7 @@ fun SeatSelectionScreen(navController : NavController,
                                             isSelected = selectedDate == date)
                                     }
                                 } else if (currentPicker == DateSelectionEnum.Time) {
-                                    items(timeList) { time ->
+                                    items(timeList ?: emptyList()) { time ->
                                         SingleTimeView(isSelected = time == selectedTime,
                                             time = time,
                                             onClick = { viewModel.setTime(time = time) })
@@ -198,9 +202,7 @@ fun SeatSelectionScreen(navController : NavController,
                                 }
                             }
                         }
-
                         CustomHeightSpacer(dimenResId = R.dimen.margin16)
-
                     }
 
                     Row(modifier = Modifier
@@ -280,8 +282,17 @@ fun SeatSelectionScreen(navController : NavController,
                 ) {
                     BuyTicketView(amount = animatedBookingAmount,
                         onSwipeEnd = {
-                            Log.d("SeatSelectionScreen", "onSwipeEnd")
-                            navController.navigate(route = Screen.PayTicketScreen.route)
+                            if (selectedSeats?.size != totalTicketsTobeBooked) {
+                                context.showToast(message = context.getString(R.string.please_select_remaining_seats))
+                                return@BuyTicketView
+                            }
+                            navController.navigateAndSendData(
+                                route = Screen.PayTicketScreen.route,
+                                key = Screen.BOOKING_DETAIL,
+                                data = bookingDetail?.copy(
+                                    selectedSeatList = selectedSeats?.toList()
+                                )
+                            )
                         }
                     )
                 }

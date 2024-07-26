@@ -103,4 +103,23 @@ object Utils {
             else -> "en"
         }
     }
+
+    fun getNextDaysList() : List<Pair<String, String>> {
+        val calendar = Calendar.getInstance()
+        val time = calendar.time.time
+        val calculationValue : Long = 86400000
+        val nextDaysListInMilliSecond = listOf(
+            (time + 0 * calculationValue),
+            (time + 1 * calculationValue),
+            (time + 2 * calculationValue),
+            (time + 3 * calculationValue),
+            (time + 4 * calculationValue),
+            (time + 5 * calculationValue),
+            (time + 6 * calculationValue),
+            (time + 7 * calculationValue),
+            (time + 8 * calculationValue),
+            (time + 9 * calculationValue))
+        val nextDaysList = nextDaysListInMilliSecond.map { convertToDate(time = it) }
+        return nextDaysList
+    }
 }

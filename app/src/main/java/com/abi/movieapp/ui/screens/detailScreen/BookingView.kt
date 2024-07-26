@@ -34,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.abi.movieapp.R
+import com.abi.movieapp.data.response.BookingDetail
 import com.abi.movieapp.ui.common.CustomHeightSpacer
 import com.abi.movieapp.ui.screens.seatSelectionScreen.SingleDateView
 import com.abi.movieapp.ui.theme.AppBackgroundColor
@@ -46,7 +47,7 @@ import com.abi.movieapp.ui.theme.YellowColor
 @Composable
 fun BookingView(
     viewModel : DetailViewModel,
-    onClick : () -> Unit,
+    onClick : (BookingDetail?) -> Unit,
     selectedDate : Pair<String, String>?
 ) {
     val movieShowTime by viewModel.movieShowTime.collectAsState(initial = null)
@@ -168,7 +169,11 @@ fun BookingView(
                             val showTime = item.showTime?.get(index = position)
                             MovieBookingSingleRowWithTheatreName(
                                 showTime = showTime,
-                                onClick = onClick)
+                                onClick = {
+                                val bookingDetail = viewModel.getBookedDetails(
+                                    time = showTime, theatre = item)
+                                onClick(bookingDetail)
+                            })
                         }
                     }
                 }

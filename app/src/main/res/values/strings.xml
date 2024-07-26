@@ -27,6 +27,7 @@
     <string name="no_movies">No Movies…</string>
     <string name="select_language">Select Language</string>
     <string name="go_back">Go Back</string>
+    <string name="please_select_remaining_seats">Please select remaining seats</string>
     <string name="search_with_another_movie">Search with another movie name</string>
     <string name="time">Time</string>
     <string name="distance">Distance</string>
