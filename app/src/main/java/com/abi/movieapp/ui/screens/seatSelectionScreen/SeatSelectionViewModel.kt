@@ -1,5 +1,6 @@
 package com.abi.movieapp.ui.screens.seatSelectionScreen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.abi.movieapp.data.response.Seat
 import com.abi.movieapp.data.response.TheatreHall
@@ -103,10 +104,18 @@ class SeatSelectionViewModel : ViewModel() {
             fromIndex = currentSeatPositionInTheList,
             toIndex = currentSeatPositionInTheList + _remainingSeatsToBeBooked.value)
 
+        var duplicateItemsCount = 0
+
+        currentSelectedSeatList.forEach {
+            if (seatsToBeAdded.contains(it)) {
+                duplicateItemsCount += 1
+            }
+        }
+
         currentSelectedSeatList.addAll(seatsToBeAdded)
         _selectedSeats.value = currentSelectedSeatList
         calculateBookingAmount()
-        setRemainingSeatsToBeBooked(countTobeMinus = seatsToBeAdded.size)
+        setRemainingSeatsToBeBooked(countTobeMinus = seatsToBeAdded.size - duplicateItemsCount)
     }
 
     private fun calculateBookingAmount() {
@@ -137,6 +146,7 @@ class SeatSelectionViewModel : ViewModel() {
 
     private fun setRemainingSeatsToBeBooked(countTobeMinus : Int) {
         _remainingSeatsToBeBooked.value -= countTobeMinus
+        Log.d("SeatViewModel", "Remaining Seat -> ${_remainingSeatsToBeBooked.value}")
     }
 
     private fun availableSeatsForBooking(
