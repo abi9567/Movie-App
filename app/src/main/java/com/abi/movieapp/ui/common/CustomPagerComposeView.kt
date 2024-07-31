@@ -11,14 +11,18 @@ fun <T : Any> CustomPagerComposeView (
     emptyItemView : @Composable () -> Unit,
     layoutView : @Composable () -> Unit
 ) {
+    val isListEmpty = pagingItem.itemCount == 0
 
     when(pagingItem.loadState.refresh) {
         is LoadState.Loading -> CustomLoading()
         is LoadState.NotLoading -> {
-            if (pagingItem.itemCount == 0) emptyItemView()
+            if (isListEmpty) emptyItemView()
             else layoutView()
         }
         is LoadState.Error -> {
+            //When using local db, remote mediator returns error state in offline case.
+            //So fetching data from local db in that case
+            if (!isListEmpty) layoutView()
             Log.d("CustomPager", "Load state refresh error")
         }
     }
