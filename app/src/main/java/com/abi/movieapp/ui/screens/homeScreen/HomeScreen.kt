@@ -1,5 +1,6 @@
 package com.abi.movieapp.ui.screens.homeScreen
 
+import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -20,11 +21,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -47,7 +52,7 @@ fun HomeScreen(
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
-
+    val activity = LocalContext.current as Activity
     val movieList = viewModel.filmList.collectAsLazyPagingItems()
     val state = rememberLazyGridState()
     val scope = rememberCoroutineScope()
@@ -55,9 +60,18 @@ fun HomeScreen(
         confirmValueChange = { false })
     val languages = viewModel.languageList
     val currentLanguage = viewModel.currentLanguage.observeAsState().value ?: Language.Malayalam.name
+    val isListNavigatedToTop by remember { derivedStateOf { state.firstVisibleItemIndex > 10 } }
 
-    BackHandler(enabled = modalBottomSheetState.isVisible) {
-        scope.launch { modalBottomSheetState.hide() }
+    BackHandler(enabled = true) {
+        if (modalBottomSheetState.isVisible) {
+            scope.launch { modalBottomSheetState.hide() }
+            return@BackHandler
+        }
+        if (isListNavigatedToTop) {
+            scope.launch { state.animateScrollToItem(index = 0) }
+            return@BackHandler
+        }
+        activity.finish()
     }
 
     CustomModalBottomSheetLayout(
