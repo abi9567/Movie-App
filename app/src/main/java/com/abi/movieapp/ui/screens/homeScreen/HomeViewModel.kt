@@ -16,7 +16,7 @@ import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(repository: Repository,
+class HomeViewModel @Inject constructor(repository : Repository,
                                         private val dataStore : DataStoreUtil) : ViewModel() {
 
     private val calendar = Calendar.getInstance()
