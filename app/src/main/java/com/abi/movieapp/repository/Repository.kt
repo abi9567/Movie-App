@@ -1,5 +1,7 @@
 package com.abi.movieapp.repository
 
+import android.util.Log
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -12,21 +14,33 @@ import com.abi.movieapp.data.response.MovieDetail
 import com.abi.movieapp.data.response.Movie
 import com.abi.movieapp.data.response.Resource
 import com.abi.movieapp.data.response.Video
-import com.abi.movieapp.ui.screens.homeScreen.HomePagingSource
+import com.abi.movieapp.local.MovieDataBase
+import com.abi.movieapp.local.RemoteMediator
 import com.abi.movieapp.ui.screens.searchScreen.SearchPagingSource
 import com.abi.movieapp.utils.network.NetworkUtils
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class Repository @Inject constructor(private val apiInterface : APIInterface) : RepositoryInterface {
+class Repository @Inject constructor(private val apiInterface : APIInterface,
+                                     private val movieDataBase : MovieDataBase) : RepositoryInterface {
 
+//    override fun getNowPlayingMovies(releaseDate : String?, language : String?) : Flow<PagingData<Movie>> =
+//        Pager(
+//            pagingSourceFactory = {
+//                HomePagingSource(apiInterface = apiInterface,
+//                    language = language,
+//                    releaseDate = releaseDate)
+//            },
+//            config = PagingConfig(pageSize = 10)
+//        ).flow
+
+    @OptIn(ExperimentalPagingApi::class)
     override fun getNowPlayingMovies(releaseDate : String?, language : String?) : Flow<PagingData<Movie>> =
         Pager(
-            pagingSourceFactory = {
-                HomePagingSource(apiInterface = apiInterface,
-                    language = language,
-                    releaseDate = releaseDate)
-            },
+            remoteMediator = RemoteMediator(apiInterface = apiInterface,
+                releaseDate = releaseDate, language = language,
+                movieDataBase = movieDataBase),
+            pagingSourceFactory = { movieDataBase.movieDao().getMovieList()},
             config = PagingConfig(pageSize = 10)
         ).flow
 
