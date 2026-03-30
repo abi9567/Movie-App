@@ -25,15 +25,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
-        val appUpdateManager = AppUpdateManagerFactory.create(this)
-        val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
-            if (result.resultCode != RESULT_OK) {
-                Toast.makeText(this, "Update Failed", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        checkUpdate(appUpdateManager = appUpdateManager,
-            activityResultLauncher = activityResultLauncher)
+        registerUpdateResult()
 
         enableEdgeToEdge()
         setContent {
@@ -47,17 +39,42 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
 
-private fun checkUpdate(appUpdateManager : AppUpdateManager,
-                        activityResultLauncher : ActivityResultLauncher<IntentSenderRequest>) {
-    appUpdateManager.appUpdateInfo
-        .addOnSuccessListener { updateInfo ->
-            if(updateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
-                if (updateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
-                    appUpdateManager.startUpdateFlowForResult(updateInfo, activityResultLauncher,
-                        AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE).build())
-                }
+    override fun onResume() {
+        super.onResume()
+        checkUpdate()
+    }
+
+    private var updateFlowResultLauncher: ActivityResultLauncher<IntentSenderRequest>? = null
+
+    private fun registerUpdateResult() {
+        updateFlowResultLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                // Handle successful app update
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        updateFlowResultLauncher?.apply {
+            unregister()
+            updateFlowResultLauncher = null
+        }
+    }
+
+    private fun checkUpdate() {
+        val appUpdateManager = AppUpdateManagerFactory.create(this)
+        updateFlowResultLauncher?.let { launcher ->
+            appUpdateManager.appUpdateInfo
+                .addOnSuccessListener { updateInfo ->
+                    if(updateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
+                        if (updateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+                            appUpdateManager.startUpdateFlowForResult(updateInfo, launcher,
+                                AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE).build())
+                        }
+                    }
+                }
+        }
+    }
 }
