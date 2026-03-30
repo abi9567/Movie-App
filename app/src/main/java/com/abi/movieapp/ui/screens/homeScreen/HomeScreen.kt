@@ -151,12 +151,12 @@ fun HomeScreen(
                     )
                 }
 
-                CustomWidthSpacer(dimenResId = R.dimen.margin16)
-
-                CustomGradientButton(text = stringResource(id = R.string.login),
-                    textStyle = MaterialTheme.typography.titleSmall,
-                    onClick = { })
-
+//                CustomWidthSpacer(dimenResId = R.dimen.margin16)
+//
+//                CustomGradientButton(text = stringResource(id = R.string.login),
+//                    textStyle = MaterialTheme.typography.titleSmall,
+//                    onClick = { }
+//                )
             }
         }) { topBarPadding ->
             HomeScreenFilmPaginationView(
