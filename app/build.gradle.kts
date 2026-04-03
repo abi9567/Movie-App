@@ -17,14 +17,14 @@ android {
 
 
     namespace = "com.abi.movieapp"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.abi.movieapp"
         minSdk = 24
-        targetSdk = 34
-        versionCode = 4
-        versionName = "1.2"
+        targetSdk = 35
+        versionCode = 5
+        versionName = "1.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -35,7 +35,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             buildConfigField("String", "BASE_URL", "\"${appProperties["BASE_URL"]}\"")
             buildConfigField("String", "IMAGE_URL", "\"${appProperties["IMAGE_URL"]}\"")
             buildConfigField("String", "API_KEY", "\"${appProperties["API_KEY"]}\"")
