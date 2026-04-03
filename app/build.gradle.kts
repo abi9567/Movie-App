@@ -23,8 +23,8 @@ android {
         applicationId = "com.abi.movieapp"
         minSdk = 24
         targetSdk = 35
-        versionCode = 5
-        versionName = "1.3"
+        versionCode = 7
+        versionName = "1.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -67,6 +67,7 @@ android {
         kotlinCompilerExtensionVersion = "1.5.14"
     }
     packaging {
+        jniLibs.excludes.add("**/libandroidx.graphics.path.so")
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
