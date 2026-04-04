@@ -36,6 +36,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
+            isDebuggable = false
             buildConfigField("String", "BASE_URL", "\"${appProperties["BASE_URL"]}\"")
             buildConfigField("String", "IMAGE_URL", "\"${appProperties["IMAGE_URL"]}\"")
             buildConfigField("String", "API_KEY", "\"${appProperties["API_KEY"]}\"")

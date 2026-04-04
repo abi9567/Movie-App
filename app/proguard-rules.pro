@@ -19,3 +19,32 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class * extends com.google.gson.TypeAdapter
+-keep class * implements com.google.gson.TypeAdapterFactory
+-keep class * implements com.google.gson.JsonSerializer
+-keep class * implements com.google.gson.JsonDeserializer
+
+-keep class com.google.gson.reflect.TypeToken
+-keep class * extends com.google.gson.reflect.TypeToken
+-keep public class * implements java.lang.reflect.Type
+-keep class com.abi.movieapp.data.response.** { *; }
+
+# Gson
+-keepattributes Signature
+-keepattributes *Annotation*
+
+# Keep Gson annotations
+-keep class com.google.gson.** { *; }
+
+# Prevent fields from being removed
+-keepclassmembers class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
+
+-assumenosideeffects class android.util.Log {
+  public static *** d(...);
+  public static *** w(...);
+  public static *** v(...);
+  public static *** i(...);
+}
