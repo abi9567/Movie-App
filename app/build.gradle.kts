@@ -132,4 +132,10 @@ dependencies {
 
     //Data Store
     implementation(libs.androidx.datastore.preferences)
+
+    //Room Database
+    implementation ("androidx.room:room-runtime:2.6.1")
+    kapt ("androidx.room:room-compiler:2.6.1")
+    implementation ("androidx.room:room-ktx:2.6.1")
+    implementation ("androidx.room:room-paging:2.6.1")
 }
